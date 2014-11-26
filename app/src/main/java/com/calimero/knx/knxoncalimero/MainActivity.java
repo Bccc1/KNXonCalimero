@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -92,7 +93,22 @@ public class MainActivity extends Activity {
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             resultList.setAdapter(new ArrayAdapter<String>(this,
                     android.R.layout.simple_list_item_1, matches));
+            if(matches.contains("an")){
+                lightOn();
+            }else if(matches.contains("aus")) {
+                lightOff();
+            }
+
+
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    private void lightOn(){
+        TextView tv = (TextView)findViewById(R.id.tvText);
+        tv.setText("Licht an");
+    }
+    private void lightOff(){
+        TextView tv = (TextView)findViewById(R.id.tvText);
+        tv.setText("Licht aus");
     }
 }

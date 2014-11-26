@@ -19,7 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public class MainActivity extends Activity {
@@ -32,13 +35,15 @@ public class MainActivity extends Activity {
     Boolean lightIsOn = false;
     final String LIGHT_IS_ON_PARAM = "lightIsOn";
 
+    /* Hier kommen dann als Key das Sprachkommando und als Value eine Liste von auszuführenden Befehlen rein.
+     */
+    Map<String, List<KNXAction>> voiceCommandsMapping = new HashMap<String, List<KNXAction>>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState == null)
-            Log.d("UnsereApp", "savedInstanceState ist NULL !!!!");
-
         setContentView(R.layout.activity_main);
 
         speakButton = (Button) findViewById(R.id.speakButton);
@@ -64,16 +69,45 @@ public class MainActivity extends Activity {
         lightImage = (ImageView) findViewById(R.id.imageLight);
 
         tv = (TextView)findViewById(R.id.tvText);
+
+        //Hier ist erstmal ein hardgecodetes Mapping von Sprachbefehl zu KNXBefehl
+        HashMap<String, KNXAction> knxActions = KNXActionFactory.getKNXActionsAsMap();
+
+        voiceCommandsMapping.put("an", singleActionList("Licht anschalten"));
+        voiceCommandsMapping.put("aus",singleActionList("Licht ausschalten"));
+        voiceCommandsMapping.put("Licht an", singleActionList("Licht anschalten"));
+        voiceCommandsMapping.put("Licht aus",singleActionList("Licht ausschalten"));
+        voiceCommandsMapping.put("Licht dimmen",singleActionList("Licht dimmen"));
+        voiceCommandsMapping.put("Jalousie hoch",singleActionList("Jalousien hochfahren"));
+        voiceCommandsMapping.put("Jalousie runter",singleActionList("Jalousien herunterfahren"));
+        voiceCommandsMapping.put("Kamin an",singleActionList("Kamin entfachen"));
+        voiceCommandsMapping.put("Kamin aus",singleActionList("Kamin löschen"));
+
+        //TODO Noch romantischer gestalten ;)
+        ArrayList<KNXAction> actionListRomantisch = new ArrayList<KNXAction>();
+        actionListRomantisch.add(knxActions.get("Licht dimmen"));
+        actionListRomantisch.add(knxActions.get("Kamin entfachen"));
+        voiceCommandsMapping.put("romantisch",actionListRomantisch);
+
+    }
+
+    private ArrayList<KNXAction> singleActionList(String action){
+        HashMap<String, KNXAction> knxActions = KNXActionFactory.getKNXActionsAsMap();
+        return singleActionList(knxActions.get(action));
+    }
+
+    private ArrayList<KNXAction> singleActionList(KNXAction action){
+        ArrayList<KNXAction> actionList = new ArrayList<KNXAction>();
+        actionList.add(action);
+        return actionList;
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if(savedInstanceState.containsKey(LIGHT_IS_ON_PARAM)){
-            Log.d("MyApp","LightIsOn was read from saved Instance State.");
             lightIsOn = savedInstanceState.getBoolean(LIGHT_IS_ON_PARAM);
         }else{
-            Log.d("MyApp","LightIsOn wasn't found in saved Instance State.");
             lightIsOn = false;
         }
         updateGui();
@@ -117,16 +151,39 @@ public class MainActivity extends Activity {
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             resultList.setAdapter(new ArrayAdapter<String>(this,
                     android.R.layout.simple_list_item_1, matches));
-            if(matches.contains("an")){
-                lightOn();
-            }else if(matches.contains("aus")) {
-                lightOff();
+//            if(matches.contains("an")){
+//                lightOn();
+//            }else if(matches.contains("aus")) {
+//                lightOff();
+//            }
+
+            for(String match : matches){
+                if(voiceCommandsMapping.containsKey(match)){
+                    executeKNXActions(voiceCommandsMapping.get(match));
+                    break;
+                }
+
             }
 
 
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    private void executeKNXActions(List<KNXAction> actions){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Executing:\n");
+        for(KNXAction action : actions){
+            if(action.name.equals("Licht anschalten"))
+                lightOn();
+            if(action.name.equals("Licht ausschalten"))
+                lightOff();
+            sb.append(action.name).append(" - ").append(action.gruppenadresse).append(" - ").append(action.daten).append("\n");
+        }
+        Toast.makeText(getApplicationContext(), sb.toString(),
+                Toast.LENGTH_LONG).show();
+    }
+
     private void lightOn(){
         lightIsOn = true;
         updateGui();
@@ -149,7 +206,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(LIGHT_IS_ON_PARAM,lightIsOn);
-        Log.d("MyApp","LightIsOn was stored in outState.");
+        outState.putBoolean(LIGHT_IS_ON_PARAM, lightIsOn);
     }
 }

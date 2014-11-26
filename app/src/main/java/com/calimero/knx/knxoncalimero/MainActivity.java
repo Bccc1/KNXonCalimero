@@ -6,12 +6,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,11 +27,18 @@ public class MainActivity extends Activity {
     private static final int REQUEST_CODE = 1234;
     private ListView resultList;
     Button speakButton;
+    TextView tv;
+    ImageView lightImage;
+    Boolean lightIsOn = false;
+    final String LIGHT_IS_ON_PARAM = "lightIsOn";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState == null)
+            Log.d("UnsereApp", "savedInstanceState ist NULL !!!!");
+
         setContentView(R.layout.activity_main);
 
         speakButton = (Button) findViewById(R.id.speakButton);
@@ -52,8 +61,23 @@ public class MainActivity extends Activity {
                 	    startVoiceRecognitionActivity();
                 	   }
             	  });
+        lightImage = (ImageView) findViewById(R.id.imageLight);
+
+        tv = (TextView)findViewById(R.id.tvText);
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState.containsKey(LIGHT_IS_ON_PARAM)){
+            Log.d("MyApp","LightIsOn was read from saved Instance State.");
+            lightIsOn = savedInstanceState.getBoolean(LIGHT_IS_ON_PARAM);
+        }else{
+            Log.d("MyApp","LightIsOn wasn't found in saved Instance State.");
+            lightIsOn = false;
+        }
+        updateGui();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,11 +128,28 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
     }
     private void lightOn(){
-        TextView tv = (TextView)findViewById(R.id.tvText);
-        tv.setText("Licht an");
+        lightIsOn = true;
+        updateGui();
     }
     private void lightOff(){
-        TextView tv = (TextView)findViewById(R.id.tvText);
-        tv.setText("Licht aus");
+        lightIsOn = false;
+        updateGui();
+    }
+
+    private void updateGui(){
+        if(lightIsOn){
+            lightImage.setImageResource(R.drawable.light_bulb_on);
+            tv.setText("Licht an");
+        }else{
+            lightImage.setImageResource(R.drawable.light_bulb_off);
+            tv.setText("Licht aus");
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(LIGHT_IS_ON_PARAM,lightIsOn);
+        Log.d("MyApp","LightIsOn was stored in outState.");
     }
 }

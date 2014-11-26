@@ -20,10 +20,18 @@
         android:layout_gravity="center_horizontal"
         android:background="@android:drawable/ic_btn_speak_now" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageLight"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/light_bulb_off" />
+
     <ListView
         android:id="@+id/list"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:visibility="invisible"/>
 
 </LinearLayout>

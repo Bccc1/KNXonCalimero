@@ -3,16 +3,14 @@ package com.calimero.knx.knxoncalimero;
 import java.util.Locale;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-public class MainActivity extends Activity implements VoiceControlFragment.OnVoiceControlInteractionListener{
+public class MainActivity extends Activity implements VoiceControlFragment.OnVoiceControlInteractionListener, VoiceCommandFragment.OnVoiceCommandInteractionListener, VoiceCommandListFragment.Callbacks{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -82,6 +80,34 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
 
     }
 
+    @Override
+    public void onVoiceCommandInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onItemSelected(String id) {
+        boolean mTwoPane = true; //Woher soll diese Stelle das wissen? Das ist doch scheiße -.-
+        if (mTwoPane) {
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            Bundle arguments = new Bundle();
+            arguments.putString(VoiceCommandDetailFragment.ARG_ITEM_ID, id);
+            VoiceCommandDetailFragment fragment = new VoiceCommandDetailFragment();
+            fragment.setArguments(arguments);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.voicecommand_detail_container, fragment)
+                    .commit();
+
+        } else {
+            // In single-pane mode, simply start the detail activity
+            // for the selected item ID.
+            Intent detailIntent = new Intent(this, VoiceCommandDetailActivity.class);
+            detailIntent.putExtra(VoiceCommandDetailFragment.ARG_ITEM_ID, id);
+            startActivity(detailIntent);
+        }
+    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -95,7 +121,6 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
 
         @Override
         public Fragment getItem(int position) {
-            Log.d("KNX-MainAcivity","getItem");
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position){
@@ -106,7 +131,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
                 case 2:
                     return PlaceholderFragment.newInstance(position + 1,"Here we may implement manual control over the KNXActions");
                 case 3:
-                    return PlaceholderFragment.newInstance(position + 1,"Here shall be the mapping");
+                    return VoiceCommandFragment.newInstance(position + 1 + "", "mapping in here pls");
                 default:
                     return PlaceholderFragment.newInstance(position + 1,"");
             }

@@ -1,0 +1,21 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/voicecommand_detail"
+    style="?android:attr/textAppearanceLarge" android:layout_width="match_parent"
+    android:layout_height="70dp" android:padding="16dp" android:textIsSelectable="true"
+    tools:context="com.calimero.knx.knxoncalimero.VoiceCommandDetailFragment"
+        android:text="Some Text" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/actionListView"
+        android:layout_below="@+id/voicecommand_detail" />
+
+</RelativeLayout>
+
+

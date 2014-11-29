@@ -50,4 +50,9 @@ public class KNXAction {
         result = 31 * result + (daten != null ? daten.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

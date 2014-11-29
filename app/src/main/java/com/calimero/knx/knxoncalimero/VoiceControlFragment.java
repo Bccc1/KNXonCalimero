@@ -49,9 +49,7 @@ public class VoiceControlFragment extends Fragment {
     Boolean lightIsOn = false;
     final String LIGHT_IS_ON_PARAM = "lightIsOn";
 
-    /* Hier kommen dann als Key das Sprachkommando und als Value eine Liste von auszuführenden Befehlen rein.
-     */
-    Map<String, List<KNXAction>> voiceCommandsMapping = new HashMap<String, List<KNXAction>>();
+    VoiceCommandDAO vcDao = VoiceCommandDAO.getInstance();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -90,39 +88,6 @@ public class VoiceControlFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        createVoiceCommandMapping();
-    }
-
-    public void createVoiceCommandMapping(){
-        //Hier ist erstmal ein hardgecodetes Mapping von Sprachbefehl zu KNXBefehl
-        HashMap<String, KNXAction> knxActions = KNXActionFactory.getKNXActionsAsMap();
-
-        voiceCommandsMapping.put("an", singleActionList("Licht anschalten"));
-        voiceCommandsMapping.put("aus",singleActionList("Licht ausschalten"));
-        voiceCommandsMapping.put("Licht an", singleActionList("Licht anschalten"));
-        voiceCommandsMapping.put("Licht aus",singleActionList("Licht ausschalten"));
-        voiceCommandsMapping.put("Licht dimmen",singleActionList("Licht dimmen"));
-        voiceCommandsMapping.put("Jalousie hoch",singleActionList("Jalousien hochfahren"));
-        voiceCommandsMapping.put("Jalousie runter",singleActionList("Jalousien herunterfahren"));
-        voiceCommandsMapping.put("Kamin an",singleActionList("Kamin entfachen"));
-        voiceCommandsMapping.put("Kamin aus",singleActionList("Kamin löschen"));
-
-        //TODO Noch romantischer gestalten ;)
-        ArrayList<KNXAction> actionListRomantisch = new ArrayList<KNXAction>();
-        actionListRomantisch.add(knxActions.get("Licht dimmen"));
-        actionListRomantisch.add(knxActions.get("Kamin entfachen"));
-        voiceCommandsMapping.put("romantisch",actionListRomantisch);
-    }
-
-    private ArrayList<KNXAction> singleActionList(String action){
-        HashMap<String, KNXAction> knxActions = KNXActionFactory.getKNXActionsAsMap();
-        return singleActionList(knxActions.get(action));
-    }
-
-    private ArrayList<KNXAction> singleActionList(KNXAction action){
-        ArrayList<KNXAction> actionList = new ArrayList<KNXAction>();
-        actionList.add(action);
-        return actionList;
     }
 
     private void startVoiceRecognitionActivity() {
@@ -141,15 +106,10 @@ public class VoiceControlFragment extends Fragment {
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             resultList.setAdapter(new ArrayAdapter<String>(this.getActivity(),
                     android.R.layout.simple_list_item_1, matches));
-//            if(matches.contains("an")){
-//                lightOn();
-//            }else if(matches.contains("aus")) {
-//                lightOff();
-//            }
 
             for(String match : matches){
-                if(voiceCommandsMapping.containsKey(match)){
-                    executeKNXActions(voiceCommandsMapping.get(match));
+                if(vcDao.voiceCommandsMapping.containsKey(match)){
+                    executeKNXActions(vcDao.voiceCommandsMapping.get(match).actions);
                     break;
                 }
 
@@ -168,6 +128,11 @@ public class VoiceControlFragment extends Fragment {
         }
         Toast.makeText(getActivity().getApplicationContext(), sb.toString(),
                 Toast.LENGTH_LONG).show();
+        //Hier müsste dann sowas stehen wie
+        //CalimeroAdapter.executeActions(actions);
+        //oder
+        //for(KNXAction action : actions)
+        //  CalimeroAdapter.executeAction(action);
     }
 
     @Override

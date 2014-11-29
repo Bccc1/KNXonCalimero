@@ -11,5 +11,7 @@
     <string name="title_section2">VoiceControl</string>
     <string name="title_section3">Manual Control</string>
     <string name="title_section4">Mapping</string>
+    <string name="title_voicecommand_list">VoiceCommands</string>
+    <string name="title_voicecommand_detail">VoiceCommand Detail</string>
 
 </resources>

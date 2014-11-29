@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.calimero.knx.knxoncalimero.VoiceCommandFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <fragment
+        android:layout_width="160dp"
+        android:layout_height="match_parent"
+        android:name="com.calimero.knx.knxoncalimero.VoiceCommandListFragment"
+        android:id="@+id/voicecommand_list"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        tools:layout="@android:layout/list_content" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/voicecommand_detail_container"
+        android:layout_toRightOf="@+id/voicecommand_list"
+        android:layout_toEndOf="@+id/voicecommand_list"></FrameLayout>
+
+</RelativeLayout>

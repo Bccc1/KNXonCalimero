@@ -1,117 +1,59 @@
 package com.calimero.knx.knxoncalimero;
 
+import java.util.Locale;
+
 import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.net.Uri;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
+import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements VoiceControlFragment.OnVoiceControlInteractionListener{
 
-    private static final int REQUEST_CODE = 1234;
-    private ListView resultList;
-    Button speakButton;
-    TextView tv;
-    ImageView lightImage;
-    Boolean lightIsOn = false;
-    final String LIGHT_IS_ON_PARAM = "lightIsOn";
-
-    /* Hier kommen dann als Key das Sprachkommando und als Value eine Liste von auszuführenden Befehlen rein.
+    /**
+     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * fragments for each of the sections. We use a
+     * {@link FragmentPagerAdapter} derivative, which will keep every
+     * loaded fragment in memory. If this becomes too memory intensive, it
+     * may be best to switch to a
+     * {@link android.support.v13.app.FragmentStatePagerAdapter}.
      */
-    Map<String, List<KNXAction>> voiceCommandsMapping = new HashMap<String, List<KNXAction>>();
+    SectionsPagerAdapter mSectionsPagerAdapter;
 
-
+    /**
+     * The {@link ViewPager} that will host the section contents.
+     */
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        speakButton = (Button) findViewById(R.id.speakButton);
 
-        resultList = (ListView) findViewById(R.id.list);
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
-        // Disable button if no recognition service is present
-        PackageManager pm = getPackageManager();
-        List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(
-                RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
-        if (activities.size() == 0) {
-            speakButton.setEnabled(false);
-            Toast.makeText(getApplicationContext(), "Recognizer Not Found",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-        speakButton.setOnClickListener(new OnClickListener() {
-            	   @Override
-            	   public void onClick(View v) {
-                	    startVoiceRecognitionActivity();
-                	   }
-            	  });
-        lightImage = (ImageView) findViewById(R.id.imageLight);
-
-        tv = (TextView)findViewById(R.id.tvText);
-
-        //Hier ist erstmal ein hardgecodetes Mapping von Sprachbefehl zu KNXBefehl
-        HashMap<String, KNXAction> knxActions = KNXActionFactory.getKNXActionsAsMap();
-
-        voiceCommandsMapping.put("an", singleActionList("Licht anschalten"));
-        voiceCommandsMapping.put("aus",singleActionList("Licht ausschalten"));
-        voiceCommandsMapping.put("Licht an", singleActionList("Licht anschalten"));
-        voiceCommandsMapping.put("Licht aus",singleActionList("Licht ausschalten"));
-        voiceCommandsMapping.put("Licht dimmen",singleActionList("Licht dimmen"));
-        voiceCommandsMapping.put("Jalousie hoch",singleActionList("Jalousien hochfahren"));
-        voiceCommandsMapping.put("Jalousie runter",singleActionList("Jalousien herunterfahren"));
-        voiceCommandsMapping.put("Kamin an",singleActionList("Kamin entfachen"));
-        voiceCommandsMapping.put("Kamin aus",singleActionList("Kamin löschen"));
-
-        //TODO Noch romantischer gestalten ;)
-        ArrayList<KNXAction> actionListRomantisch = new ArrayList<KNXAction>();
-        actionListRomantisch.add(knxActions.get("Licht dimmen"));
-        actionListRomantisch.add(knxActions.get("Kamin entfachen"));
-        voiceCommandsMapping.put("romantisch",actionListRomantisch);
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
     }
 
-    private ArrayList<KNXAction> singleActionList(String action){
-        HashMap<String, KNXAction> knxActions = KNXActionFactory.getKNXActionsAsMap();
-        return singleActionList(knxActions.get(action));
-    }
-
-    private ArrayList<KNXAction> singleActionList(KNXAction action){
-        ArrayList<KNXAction> actionList = new ArrayList<KNXAction>();
-        actionList.add(action);
-        return actionList;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if(savedInstanceState.containsKey(LIGHT_IS_ON_PARAM)){
-            lightIsOn = savedInstanceState.getBoolean(LIGHT_IS_ON_PARAM);
-        }else{
-            lightIsOn = false;
-        }
-        updateGui();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -135,77 +77,111 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void startVoiceRecognitionActivity() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                "AndroidBite Voice Recognition...");
-        startActivityForResult(intent, REQUEST_CODE);
+    @Override
+    public void onVoiceControlInteraction(Uri uri) {
+
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            ArrayList<String> matches = data
-                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            resultList.setAdapter(new ArrayAdapter<String>(this,
-                    android.R.layout.simple_list_item_1, matches));
-//            if(matches.contains("an")){
-//                lightOn();
-//            }else if(matches.contains("aus")) {
-//                lightOff();
-//            }
 
-            for(String match : matches){
-                if(voiceCommandsMapping.containsKey(match)){
-                    executeKNXActions(voiceCommandsMapping.get(match));
-                    break;
-                }
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Log.d("KNX-MainAcivity","getItem");
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            switch (position){
+                case 0:
+                    return PlaceholderFragment.newInstance(position + 1,"Swipe Right for Voice Control");
+                case 1:
+                    return VoiceControlFragment.newInstance("a","b");
+                case 2:
+                    return PlaceholderFragment.newInstance(position + 1,"Here we may implement manual control over the KNXActions");
+                case 3:
+                    return PlaceholderFragment.newInstance(position + 1,"Here shall be the mapping");
+                default:
+                    return PlaceholderFragment.newInstance(position + 1,"");
             }
-
-
         }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
-    private void executeKNXActions(List<KNXAction> actions){
-        StringBuilder sb = new StringBuilder();
-        sb.append("Executing:\n");
-        for(KNXAction action : actions){
-            if(action.name.equals("Licht anschalten"))
-                lightOn();
-            if(action.name.equals("Licht ausschalten"))
-                lightOff();
-            sb.append(action.name).append(" - ").append(action.gruppenadresse).append(" - ").append(action.daten).append("\n");
+        @Override
+        public int getCount() {
+            // Show 3 total pages.
+            return 4;
         }
-        Toast.makeText(getApplicationContext(), sb.toString(),
-                Toast.LENGTH_LONG).show();
-    }
 
-    private void lightOn(){
-        lightIsOn = true;
-        updateGui();
-    }
-    private void lightOff(){
-        lightIsOn = false;
-        updateGui();
-    }
-
-    private void updateGui(){
-        if(lightIsOn){
-            lightImage.setImageResource(R.drawable.light_bulb_on);
-            tv.setText("Licht an");
-        }else{
-            lightImage.setImageResource(R.drawable.light_bulb_off);
-            tv.setText("Licht aus");
+        @Override
+        public CharSequence getPageTitle(int position) {
+            Locale l = Locale.getDefault();
+            switch (position) {
+                case 0:
+                    return getString(R.string.title_section1).toUpperCase(l);
+                case 1:
+                    return getString(R.string.title_section2).toUpperCase(l);
+                case 2:
+                    return getString(R.string.title_section3).toUpperCase(l);
+                case 3:
+                    return getString(R.string.title_section4).toUpperCase(l);
+            }
+            return null;
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(LIGHT_IS_ON_PARAM, lightIsOn);
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+        private static final String ARG_SECTION_TEXT = "section_text";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber, String sectionText) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            args.putString(ARG_SECTION_TEXT, sectionText);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PlaceholderFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+                TextView textView = (TextView) rootView.findViewById(R.id.section_text);
+                if(textView != null){
+                    Bundle args = this.getArguments();
+                    String sectionText = args.getString(ARG_SECTION_TEXT);
+                    if(sectionText!=null) {
+                        textView.setText(sectionText);
+                    }else{
+                        Log.d("KNX - Main","sectionText is null");
+                    }
+                }
+                else{
+                    Log.d("KNX - Main","textView is null");
+                }
+            return rootView;
+        }
     }
+
 }

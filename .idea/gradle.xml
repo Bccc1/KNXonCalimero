@@ -5,14 +5,6 @@
       <GradleProjectSettings>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/calimero-2.0.4" />
-            <option value="$PROJECT_DIR$/calimero-tools-2.0.2" />
-          </set>
-        </option>
       </GradleProjectSettings>
     </option>
   </component>

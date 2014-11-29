@@ -1,37 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    tools:context="com.calimero.knx.knxoncalimero.MainActivity">
-
-    <TextView
-        android:id="@+id/tvText"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Click the button below and start speaking"
-        android:textSize="18dp" />
-
-    <Button
-        android:id="@+id/speakButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@android:drawable/ic_btn_speak_now" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageLight"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/light_bulb_off" />
-
-    <ListView
-        android:id="@+id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:visibility="visible"/>
-
-</LinearLayout>
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/pager"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    tools:context="com.calimero.knx.knxoncalimero.MainActivity" />

@@ -1,0 +1,28 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.calimero.knx.knxoncalimero.VoiceControlFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:text="@string/vc_start_speaking"
+        android:layout_margin="20dp"
+        android:id="@+id/tvText"
+        android:gravity="center"
+        android:textSize="30dp" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/speakButton"
+        android:layout_gravity="center"
+        android:background="@android:drawable/ic_btn_speak_now" />
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/vcResultListView"
+        android:layout_gravity="center_horizontal|bottom"
+        android:visibility="invisible" />
+
+</FrameLayout>

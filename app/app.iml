@@ -84,8 +84,10 @@
     <orderEntry type="library" exported="" name="support-v13-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.2" level="project" />
-    <orderEntry type="library" exported="" name="calimero-tools-2.0.2" level="project" />
     <orderEntry type="library" exported="" name="calimero-2.0.4" level="project" />
+    <orderEntry type="library" exported="" name="1_calimero-2.0.4" level="project" />
+    <orderEntry type="library" exported="" name="calimero-tools-2.0.2" level="project" />
+    <orderEntry type="library" exported="" name="1_calimero-tools-2.0.2" level="project" />
   </component>
 </module>
 

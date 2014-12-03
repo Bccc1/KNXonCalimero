@@ -1,2 +1,0 @@
-configurations.create("default")
-artifacts.add("default", file('calimero-2.0.4.jar'))

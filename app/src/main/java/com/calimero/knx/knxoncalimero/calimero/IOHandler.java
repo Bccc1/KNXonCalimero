@@ -8,9 +8,9 @@ import java.net.UnknownHostException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import tuwien.auto.calimero.GroupAddress;
 import tuwien.auto.calimero.exception.KNXException;
 import tuwien.auto.calimero.knxnetip.KNXnetIPConnection;
-import tuwien.auto.calimero.link.KNXLinkClosedException;
 import tuwien.auto.calimero.link.KNXNetworkLinkIP;
 import tuwien.auto.calimero.link.medium.TPSettings;
 import tuwien.auto.calimero.process.ProcessCommunicator;
@@ -27,7 +27,7 @@ public class IOHandler extends Thread {
     private final BlockingQueue<KnxAction> outboundData;
     private final BlockingQueue<String> inboundData;
 
-    private String hostIp = "", gatewayIp = "";
+    private String hostIp = null, gatewayIp;
     private KNXNetworkLinkIP networkLinkIp;
     private ProcessCommunicator communicator;
 
@@ -36,13 +36,15 @@ public class IOHandler extends Thread {
      * Once this {@link Thread} is started, it will constantly check the given
      * {@link BlockingQueue} for new {@link KnxAction} objects ready to be sent on the bus.
      *
+     * @param gatewayIp - the target ip address
      * @param outboundData - the {@link BlockingQueue} that {@link KnxAction} objects will
-     *                     be added to.
+     *                     be added to
      * @throws KNXException - if the KNX connection could not be established
      * @throws UnknownHostException - if the host data is invalid
      */
-    public IOHandler (BlockingQueue<KnxAction> outboundData) throws KNXException, UnknownHostException {
+    public IOHandler (String gatewayIp, BlockingQueue<KnxAction> outboundData) throws KNXException, UnknownHostException {
 
+        this.gatewayIp = gatewayIp;
         this.outboundData = outboundData;
         this.inboundData = new ArrayBlockingQueue<String>(4096);
         openConnection();
@@ -52,7 +54,7 @@ public class IOHandler extends Thread {
 
         this.networkLinkIp = new KNXNetworkLinkIP(
                 KNXNetworkLinkIP.TUNNEL,
-                new InetSocketAddress(InetAddress.getByName(null), 0),
+                new InetSocketAddress(InetAddress.getByName(hostIp), 0),
                 new InetSocketAddress(InetAddress.getByName(gatewayIp), KNXnetIPConnection.IP_PORT),
                 false,
                 new TPSettings(false));
@@ -94,6 +96,11 @@ public class IOHandler extends Thread {
 
     private void sendOnBus(KnxAction action) {
 
-        // Calimero API usage
+        try {
+            GroupAddress address = new GroupAddress(action.getGroupAddress());
+            communicator.write(address, action.getData());
+        } catch (KNXException e) {
+            e.printStackTrace();
+        }
     }
 }

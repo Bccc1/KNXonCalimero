@@ -1,6 +1,13 @@
 package com.calimero.knx.knxoncalimero.core;
 
+import com.calimero.knx.knxoncalimero.calimero.IOHandler;
+
+import java.net.UnknownHostException;
 import java.util.List;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
+
+import tuwien.auto.calimero.exception.KNXException;
 
 /**
  * Created by David on 01.12.14.
@@ -20,9 +27,22 @@ import java.util.List;
  * und ein Container wo in der Vergangenheit empfangene Daten abgelegt werden.
  */
 public class KnxAdapter {
+    private IOHandler io;
+    private BlockingQueue<KnxAction> bq;
+    public KnxAdapter() {
+        try {
+            this.io = new IOHandler("Ziel-IP",bq);
+            io.start();
+        } catch (KNXException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void executeKnxAction(KnxAction action){
         //TODO Implement
+        bq.add(action);
     }
 
     public void executeKnxActions(List<KnxAction> actions){

@@ -4,6 +4,7 @@ import com.calimero.knx.knxoncalimero.calimero.IOHandler;
 
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 
@@ -28,10 +29,10 @@ import tuwien.auto.calimero.exception.KNXException;
  */
 public class KnxAdapter {
     private IOHandler io;
-    private BlockingQueue<KnxAction> bq;
+    private BlockingQueue<KnxAction> bq = new ArrayBlockingQueue<KnxAction>(50);
     public KnxAdapter() {
         try {
-            this.io = new IOHandler("Ziel-IP",bq);
+            this.io = new IOHandler("192.168.10.28",bq);
             io.start();
         } catch (KNXException e) {
             e.printStackTrace();

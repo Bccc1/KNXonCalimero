@@ -105,7 +105,28 @@ public class VoiceCommandDao {
         return null;
     }
 
+    //public List<VoiceCommand> getVoiceCommands(){
+    //Hier müsste dann der DB Kram laufen
+    //select alle voiceCommands auf der entspr. Table
+    //for(VoiceCommandMapping vc : result){
+    //  populateVoiceCommand(vc);
+    //}
+    //}
+
     public Map<String, VoiceCommand> getVoiceCommandsMapping() {
+        //Hier dann aus getVoiceCommands() eine Map machen.
         return voiceCommandsMapping;
     }
+
+    //private void populateVoiceCommand(VoiceCommandMapping vc){
+    //  List<String> ids = getActionIdsForVoiceCommand(vc.id);
+    //  List<KnxAction> actions = new ArrayList<KnxAction>();
+    //  for(String id : ids){
+    //      actions.add(KnxActionDao.getKnxAction(id));
+    //  }
+    //  vc.actions = actions;
+    //  return;
+    //}
+
+    //in KNXActionDao gibts public KnxAction getKnxAction(String id)
 }

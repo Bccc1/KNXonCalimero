@@ -10,6 +10,7 @@ package com.calimero.knx.knxoncalimero;
  * Für die Ausführung bräuchte es eine weiter Klasse, aktuell der {@link KnxAdapter}.
  *
  * Dass das alles häßlich ist, weiß ich auch - Mir passte das so aber grad ganz gut in den Prototyp.
+ *
  */
 public class KnxAction {
 

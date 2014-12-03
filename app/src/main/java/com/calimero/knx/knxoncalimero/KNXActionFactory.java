@@ -9,6 +9,7 @@ import java.util.HashMap;
  * Das hier ist gar keine KNXActionFactory :P
  *
  * Sondern hier haue ich die Liste von vorkonfigurierten KNXActions raus.
+ *
  */
 public class KnxActionFactory {
 

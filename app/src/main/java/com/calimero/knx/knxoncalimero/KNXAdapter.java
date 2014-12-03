@@ -18,7 +18,6 @@ import java.util.List;
  * Ein Container für Daten die Gesendet werden sollen,
  * ein Container für den Empfang
  * und ein Container wo in der Vergangenheit empfangene Daten abgelegt werden.
- *
  */
 public class KnxAdapter {
 

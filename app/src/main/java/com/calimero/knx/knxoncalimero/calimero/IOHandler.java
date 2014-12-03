@@ -98,7 +98,14 @@ public class IOHandler extends Thread {
 
         try {
             GroupAddress address = new GroupAddress(action.getGroupAddress());
-            communicator.write(address, action.getData());
+            String data = action.getData();
+            if ("0".equals(data)) {
+
+                communicator.write(address, false);
+            } else if ("1".equals(data)) {
+
+                communicator.write(address, true);
+            }
         } catch (KNXException e) {
             e.printStackTrace();
         }

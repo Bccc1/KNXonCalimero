@@ -1,6 +1,5 @@
 package com.calimero.knx.knxoncalimero;
 
-import android.speech.tts.Voice;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -11,9 +10,9 @@ import java.util.Map;
 /**
  * Created by David on 29.11.2014.
  */
-public class VoiceCommandDAO {
+public class VoiceCommandDao {
 
-    private static VoiceCommandDAO voiceCommandDAO;
+    private static VoiceCommandDao voiceCommandDao;
 
     private static int idcounter = 0;
 
@@ -22,20 +21,20 @@ public class VoiceCommandDAO {
     List<VoiceCommand> voiceCommands = new ArrayList<VoiceCommand>();
     Map<String, VoiceCommand> voiceCommandsMapping = new HashMap<String, VoiceCommand>();
 
-    public static VoiceCommandDAO getInstance(){
-        if(voiceCommandDAO == null) {
-            voiceCommandDAO = new VoiceCommandDAO();
-            voiceCommandDAO.createVoiceCommandMapping();
+    public static VoiceCommandDao getInstance(){
+        if(voiceCommandDao == null) {
+            voiceCommandDao = new VoiceCommandDao();
+            voiceCommandDao.createVoiceCommandMapping();
         }
-        return voiceCommandDAO;
+        return voiceCommandDao;
     }
 
-    private VoiceCommandDAO() {
+    private VoiceCommandDao() {
     }
 
     private void createVoiceCommandMapping(){
         //Hier ist erstmal ein hardgecodetes Mapping von Sprachbefehl zu KNXBefehl
-        HashMap<String, KNXAction> knxActions = KNXActionFactory.getKNXActionsAsMap();
+        HashMap<String, KnxAction> knxActions = KnxActionFactory.getKNXActionsAsMap();
 
         addSingleActionVoiceCommand("an","Licht anschalten");
         addSingleActionVoiceCommand("aus", "Licht ausschalten");
@@ -48,7 +47,7 @@ public class VoiceCommandDAO {
         addSingleActionVoiceCommand("Kamin aus", "Kamin löschen");
 
         //TODO Noch romantischer gestalten ;)
-        ArrayList<KNXAction> actionListRomantisch = new ArrayList<KNXAction>();
+        ArrayList<KnxAction> actionListRomantisch = new ArrayList<KnxAction>();
         actionListRomantisch.add(knxActions.get("Licht dimmen"));
         actionListRomantisch.add(knxActions.get("Kamin entfachen"));
         addVoiceCommand("romantisch",actionListRomantisch);
@@ -60,13 +59,13 @@ public class VoiceCommandDAO {
         voiceCommands.add(voiceCommand);
     }
 
-    public void addSingleActionVoiceCommand(String name, KNXAction action){
+    public void addSingleActionVoiceCommand(String name, KnxAction action){
         VoiceCommand voiceCommand = singleActionVoiceCommand(name, action);
         voiceCommandsMapping.put(name,voiceCommand);
         voiceCommands.add(voiceCommand);
     }
 
-    public void addVoiceCommand(String name, List<KNXAction> actions){
+    public void addVoiceCommand(String name, List<KnxAction> actions){
         VoiceCommand vc = new VoiceCommand();
         vc.actions = actions;
         vc.id = ""+idcounter++;
@@ -76,12 +75,12 @@ public class VoiceCommandDAO {
     }
 
     private VoiceCommand singleActionVoiceCommand(String name, String action){
-        HashMap<String, KNXAction> knxActions = KNXActionFactory.getKNXActionsAsMap();
+        HashMap<String, KnxAction> knxActions = KnxActionFactory.getKNXActionsAsMap();
         return singleActionVoiceCommand(name, knxActions.get(action));
     }
 
-    private VoiceCommand singleActionVoiceCommand(String name, KNXAction action){
-        ArrayList<KNXAction> actionList = new ArrayList<KNXAction>();
+    private VoiceCommand singleActionVoiceCommand(String name, KnxAction action){
+        ArrayList<KnxAction> actionList = new ArrayList<KnxAction>();
         actionList.add(action);
         VoiceCommand vc = new VoiceCommand();
         vc.actions = actionList;

@@ -44,7 +44,7 @@ public class VoiceCommandDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = VoiceCommandDAO.getInstance().getById(getArguments().getString(ARG_ITEM_ID));
+            mItem = VoiceCommandDao.getInstance().getById(getArguments().getString(ARG_ITEM_ID));
         }
     }
 
@@ -56,7 +56,7 @@ public class VoiceCommandDetailFragment extends Fragment {
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
             ((TextView) rootView.findViewById(R.id.voicecommand_detail)).setText(mItem.name);
-            ((ListView) rootView.findViewById(R.id.actionListView)).setAdapter(new ArrayAdapter<KNXAction>(
+            ((ListView) rootView.findViewById(R.id.actionListView)).setAdapter(new ArrayAdapter<KnxAction>(
                     getActivity(),
                     android.R.layout.simple_list_item_1,
                     android.R.id.text1,

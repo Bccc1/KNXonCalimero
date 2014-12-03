@@ -9,7 +9,7 @@ import java.util.List;
 public class VoiceCommand {
     String id;
     String name;
-    List<KNXAction> actions = new ArrayList<KNXAction>();
+    List<KnxAction> actions = new ArrayList<KnxAction>();
 
     @Override
     public String toString() {

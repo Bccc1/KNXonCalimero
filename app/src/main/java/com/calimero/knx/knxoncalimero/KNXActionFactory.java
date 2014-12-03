@@ -2,7 +2,6 @@ package com.calimero.knx.knxoncalimero;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by David on 26.11.2014.
@@ -11,24 +10,24 @@ import java.util.List;
  *
  * Sondern hier haue ich die Liste von vorkonfigurierten KNXActions raus.
  */
-public class KNXActionFactory {
+public class KnxActionFactory {
 
-    public static ArrayList<KNXAction> getKNXActionsAsList(){
+    public static ArrayList<KnxAction> getKNXActionsAsList(){
         //TODO Echte Objekte des Aufbaus verwenden und Gruppenadresse und Telegramminhalt setzen.
-        ArrayList<KNXAction> kal = new ArrayList<KNXAction>();
-        kal.add(new KNXAction("Licht anschalten"));
-        kal.add(new KNXAction("Licht dimmen"));
-        kal.add(new KNXAction("Licht ausschalten"));
-        kal.add(new KNXAction("Jalousien hochfahren"));
-        kal.add(new KNXAction("Jalousien herunterfahren"));
-        kal.add(new KNXAction("Kamin entfachen"));
-        kal.add(new KNXAction("Kamin löschen"));
+        ArrayList<KnxAction> kal = new ArrayList<KnxAction>();
+        kal.add(new KnxAction("Licht anschalten"));
+        kal.add(new KnxAction("Licht dimmen"));
+        kal.add(new KnxAction("Licht ausschalten"));
+        kal.add(new KnxAction("Jalousien hochfahren"));
+        kal.add(new KnxAction("Jalousien herunterfahren"));
+        kal.add(new KnxAction("Kamin entfachen"));
+        kal.add(new KnxAction("Kamin löschen"));
         return kal;
     }
 
-    public static HashMap<String, KNXAction> getKNXActionsAsMap(){
-        HashMap<String, KNXAction> kal = new HashMap<String, KNXAction>();
-        for(KNXAction action : getKNXActionsAsList()){
+    public static HashMap<String, KnxAction> getKNXActionsAsMap(){
+        HashMap<String, KnxAction> kal = new HashMap<String, KnxAction>();
+        for(KnxAction action : getKNXActionsAsList()){
             kal.put(action.name,action);
         }
         return kal;

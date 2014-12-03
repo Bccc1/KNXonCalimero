@@ -7,11 +7,15 @@ package com.calimero.knx.knxoncalimero;
  * Gedanke ist, dass eine KNXAction eine auszuführende Aktion ist,
  * wie zum Beispiel ein Telegram "an" an die Gruppenadresse von Licht.
  * So eine Action kann selber sich nicht ausführen sondern ist nur ein Container für die Daten.
- * Für die Ausführung bräuchte es eine weiter Klasse.
+ * Für die Ausführung bräuchte es eine weiter Klasse, aktuell der {@link KnxAdapter}.
  *
  * Dass das alles häßlich ist, weiß ich auch - Mir passte das so aber grad ganz gut in den Prototyp.
  */
-public class KNXAction {
+public class KnxAction {
+
+    /* Id um die Action in einer Datenbank zu speichern */
+    String id;
+
     /* Ein Name für Darstellungszwecke */
     String name;
 
@@ -21,19 +25,19 @@ public class KNXAction {
     /* Das Zeugs was im Telegram bauch ist, kA wie das heißt. Dass "an" in "Licht an!" halt. */
     String daten;
 
-    public KNXAction() {
+    public KnxAction() {
     }
 
-    public KNXAction(String name) {
+    public KnxAction(String name) {
         this.name = name;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o) { //FIXME ignoriert noch die ID
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        KNXAction knxAction = (KNXAction) o;
+        KnxAction knxAction = (KnxAction) o;
 
         if (daten != null ? !daten.equals(knxAction.daten) : knxAction.daten != null) return false;
         if (gruppenadresse != null ? !gruppenadresse.equals(knxAction.gruppenadresse) : knxAction.gruppenadresse != null)

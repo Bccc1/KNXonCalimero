@@ -20,9 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -49,7 +47,9 @@ public class VoiceControlFragment extends Fragment {
     Boolean lightIsOn = false;
     final String LIGHT_IS_ON_PARAM = "lightIsOn";
 
-    VoiceCommandDAO vcDao = VoiceCommandDAO.getInstance();
+    KnxAdapter knxAdapter;
+
+    VoiceCommandDao vcDao = VoiceCommandDao.getInstance();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -87,6 +87,7 @@ public class VoiceControlFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        knxAdapter = new KnxAdapter();
 
     }
 
@@ -120,19 +121,16 @@ public class VoiceControlFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void executeKNXActions(List<KNXAction> actions){
+    private void executeKNXActions(List<KnxAction> actions){
         StringBuilder sb = new StringBuilder();
         sb.append("Executing:\n");
-        for(KNXAction action : actions){
+        for(KnxAction action : actions){
             sb.append(action.name).append(" - ").append(action.gruppenadresse).append(" - ").append(action.daten).append("\n");
         }
         Toast.makeText(getActivity().getApplicationContext(), sb.toString(),
                 Toast.LENGTH_LONG).show();
-        //Hier müsste dann sowas stehen wie
-        //CalimeroAdapter.executeActions(actions);
-        //oder
-        //for(KNXAction action : actions)
-        //  CalimeroAdapter.executeAction(action);
+
+        knxAdapter.executeKnxActions(actions);
     }
 
     @Override

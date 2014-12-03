@@ -19,6 +19,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.calimero.knx.knxoncalimero.core.KnxAction;
+import com.calimero.knx.knxoncalimero.core.KnxAdapter;
+import com.calimero.knx.knxoncalimero.dao.VoiceCommandDao;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,8 +113,8 @@ public class VoiceControlFragment extends Fragment {
                     android.R.layout.simple_list_item_1, matches));
 
             for(String match : matches){
-                if(vcDao.voiceCommandsMapping.containsKey(match)){
-                    executeKNXActions(vcDao.voiceCommandsMapping.get(match).actions);
+                if(vcDao.getVoiceCommandsMapping().containsKey(match)){
+                    executeKNXActions(vcDao.getVoiceCommandsMapping().get(match).actions);
                     break;
                 }
 
@@ -125,7 +129,7 @@ public class VoiceControlFragment extends Fragment {
         StringBuilder sb = new StringBuilder();
         sb.append("Executing:\n");
         for(KnxAction action : actions){
-            sb.append(action.name).append(" - ").append(action.gruppenadresse).append(" - ").append(action.daten).append("\n");
+            sb.append(action.getName()).append(" - ").append(action.getGroupAddress()).append(" - ").append(action.getData()).append("\n");
         }
         Toast.makeText(getActivity().getApplicationContext(), sb.toString(),
                 Toast.LENGTH_LONG).show();

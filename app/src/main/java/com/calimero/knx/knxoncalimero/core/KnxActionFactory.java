@@ -1,4 +1,4 @@
-package com.calimero.knx.knxoncalimero;
+package com.calimero.knx.knxoncalimero.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;

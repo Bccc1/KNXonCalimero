@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.calimero.knx.knxoncalimero.dao.VoiceCommandDao;
 
 
 /**
@@ -75,7 +76,7 @@ public class VoiceCommandListFragment extends ListFragment {
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                VoiceCommandDao.getInstance().voiceCommands));
+                VoiceCommandDao.getInstance().getVoiceCommands()));
     }
 
     @Override
@@ -115,7 +116,7 @@ public class VoiceCommandListFragment extends ListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(VoiceCommandDao.getInstance().voiceCommands.get(position).id);
+        mCallbacks.onItemSelected(VoiceCommandDao.getInstance().getVoiceCommands().get(position).id);
     }
 
     @Override

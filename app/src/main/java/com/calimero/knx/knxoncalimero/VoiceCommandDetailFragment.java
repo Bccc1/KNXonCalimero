@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.calimero.knx.knxoncalimero.core.KnxAction;
+import com.calimero.knx.knxoncalimero.dao.VoiceCommandDao;
 
 
 /**

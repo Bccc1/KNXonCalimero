@@ -1,4 +1,4 @@
-package com.calimero.knx.knxoncalimero;
+package com.calimero.knx.knxoncalimero.core;
 
 /**
  * Created by David on 26.11.2014.
@@ -21,10 +21,18 @@ public class KnxAction {
     String name;
 
     /* Das ist klar, oder? */
-    String gruppenadresse;
+    String groupAddress;
+
+    public String getData() {
+        return data;
+    }
+
+    public String getGroupAddress() {
+        return groupAddress;
+    }
 
     /* Das Zeugs was im Telegram bauch ist, kA wie das heißt. Dass "an" in "Licht an!" halt. */
-    String daten;
+    String data;
 
     public KnxAction() {
     }
@@ -40,8 +48,8 @@ public class KnxAction {
 
         KnxAction knxAction = (KnxAction) o;
 
-        if (daten != null ? !daten.equals(knxAction.daten) : knxAction.daten != null) return false;
-        if (gruppenadresse != null ? !gruppenadresse.equals(knxAction.gruppenadresse) : knxAction.gruppenadresse != null)
+        if (data != null ? !data.equals(knxAction.data) : knxAction.data != null) return false;
+        if (groupAddress != null ? !groupAddress.equals(knxAction.groupAddress) : knxAction.groupAddress != null)
             return false;
         if (name != null ? !name.equals(knxAction.name) : knxAction.name != null) return false;
 
@@ -51,13 +59,21 @@ public class KnxAction {
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (gruppenadresse != null ? gruppenadresse.hashCode() : 0);
-        result = 31 * result + (daten != null ? daten.hashCode() : 0);
+        result = 31 * result + (groupAddress != null ? groupAddress.hashCode() : 0);
+        result = 31 * result + (data != null ? data.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getId() {
+        return id;
     }
 }

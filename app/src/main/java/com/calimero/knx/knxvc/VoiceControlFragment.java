@@ -1,4 +1,4 @@
-package com.calimero.knx.knxoncalimero;
+package com.calimero.knx.knxvc;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,9 +19,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.calimero.knx.knxoncalimero.core.KnxAction;
-import com.calimero.knx.knxoncalimero.core.KnxAdapter;
-import com.calimero.knx.knxoncalimero.dao.VoiceCommandDao;
+import com.calimero.knx.knxvc.core.KnxAction;
+import com.calimero.knx.knxvc.core.KnxAdapter;
+import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.calimero.knx.knxoncalimero;
+package com.calimero.knx.knxvc;
 
 import android.os.Bundle;
 import android.app.Fragment;
@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.calimero.knx.knxoncalimero.core.KnxAction;
-import com.calimero.knx.knxoncalimero.dao.VoiceCommandDao;
+import com.calimero.knx.knxvc.core.KnxAction;
+import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 
 
 /**

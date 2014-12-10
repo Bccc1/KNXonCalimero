@@ -4,7 +4,7 @@
     android:layout_marginRight="16dp" android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal" android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context="com.calimero.knx.knxoncalimero.VoiceCommandListActivity">
+    tools:context="com.calimero.knx.knxvc.VoiceCommandListActivity">
 
     <!--
     This layout is a two-pane layout for the VoiceCommands
@@ -13,7 +13,7 @@
     -->
 
     <fragment android:id="@+id/voicecommand_list"
-        android:name="com.calimero.knx.knxoncalimero.VoiceCommandListFragment"
+        android:name="com.calimero.knx.knxvc.VoiceCommandListFragment"
         android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
         tools:layout="@android:layout/list_content" />
 

@@ -1,4 +1,4 @@
-package com.calimero.knx.knxoncalimero.core;
+package com.calimero.knx.knxvc.core;
 
 /**
  * Created by David on 26.11.2014.

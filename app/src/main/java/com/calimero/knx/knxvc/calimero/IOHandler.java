@@ -1,6 +1,6 @@
-package com.calimero.knx.knxoncalimero.calimero;
+package com.calimero.knx.knxvc.calimero;
 
-import com.calimero.knx.knxoncalimero.core.KnxAction;
+import com.calimero.knx.knxvc.core.KnxAction;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -27,7 +27,7 @@ public class IOHandler extends Thread {
     private final BlockingQueue<KnxAction> outboundData;
     private final BlockingQueue<String> inboundData;
 
-    private String hostIp = null, gatewayIp;
+    private String hostIp = "192.168.10.132", gatewayIp;
     private KNXNetworkLinkIP networkLinkIp;
     private ProcessCommunicator communicator;
 
@@ -47,15 +47,14 @@ public class IOHandler extends Thread {
         this.gatewayIp = gatewayIp;
         this.outboundData = outboundData;
         this.inboundData = new ArrayBlockingQueue<String>(4096);
-        openConnection();
     }
 
     private void openConnection() throws KNXException, UnknownHostException {
 
         this.networkLinkIp = new KNXNetworkLinkIP(
                 KNXNetworkLinkIP.TUNNEL,
-                new InetSocketAddress(InetAddress.getByName(hostIp), 0),
-                new InetSocketAddress(InetAddress.getByName(gatewayIp), KNXnetIPConnection.IP_PORT),
+                new InetSocketAddress(hostIp, 0),
+                new InetSocketAddress(gatewayIp, KNXnetIPConnection.IP_PORT),
                 false,
                 new TPSettings(false));
         this.communicator = new ProcessCommunicatorImpl(networkLinkIp);
@@ -64,6 +63,16 @@ public class IOHandler extends Thread {
     @Override
     public void run() {
 
+        if (this.networkLinkIp == null) {
+
+            try {
+                openConnection();
+            } catch (KNXException e) {
+                e.printStackTrace();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+        }
         if (!(this.communicator == null)) {
             // cancel() has not been called yet
 
@@ -98,7 +107,14 @@ public class IOHandler extends Thread {
 
         try {
             GroupAddress address = new GroupAddress(action.getGroupAddress());
-            communicator.write(address, action.getData());
+            String data = action.getData();
+            if ("0".equals(data)) {
+
+                communicator.write(address, false);
+            } else if ("1".equals(data)) {
+
+                communicator.write(address, true);
+            }
         } catch (KNXException e) {
             e.printStackTrace();
         }

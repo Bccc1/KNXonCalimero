@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.calimero.knx.knxoncalimero" >
+    package="com.calimero.knx.knxvc" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.calimero.knx.knxoncalimero.MainActivity"
+            android:name="com.calimero.knx.knxvc.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,17 +20,17 @@
 
         </activity>
         <activity
-            android:name="com.calimero.knx.knxoncalimero.VoiceCommandListActivity"
+            android:name="com.calimero.knx.knxvc.VoiceCommandListActivity"
             android:label="@string/title_voicecommand_list" >
 
         </activity>
         <activity
-            android:name="com.calimero.knx.knxoncalimero.VoiceCommandDetailActivity"
+            android:name="com.calimero.knx.knxvc.VoiceCommandDetailActivity"
             android:label="@string/title_voicecommand_detail"
-            android:parentActivityName="com.calimero.knx.knxoncalimero.VoiceCommandListActivity" >
+            android:parentActivityName="com.calimero.knx.knxvc.VoiceCommandListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.calimero.knx.knxoncalimero.VoiceCommandListActivity" />
+                android:value="com.calimero.knx.knxvc.VoiceCommandListActivity" />
         </activity>
     </application>
 

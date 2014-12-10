@@ -14,8 +14,24 @@ package com.calimero.knx.knxoncalimero.core;
  */
 public class KnxAction {
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public void setGroupAddress(String groupAddress) {
+        this.groupAddress = groupAddress;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /* Id um die Action in einer Datenbank zu speichern */
-    String id;
+    Integer id;
 
     /* Ein Name für Darstellungszwecke */
     String name;
@@ -73,7 +89,7 @@ public class KnxAction {
         return name;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 }

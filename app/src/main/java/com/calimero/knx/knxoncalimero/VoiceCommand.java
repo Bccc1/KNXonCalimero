@@ -9,7 +9,7 @@ import java.util.List;
  * Created by David on 29.11.2014.
  */
 public class VoiceCommand {
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -21,8 +21,18 @@ public class VoiceCommand {
         this.actions = actions;
     }
 
-    String id;
+    Integer id;
     String name;
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    String profile;
     List<KnxAction> actions = new ArrayList<KnxAction>();
 
     @Override
@@ -38,7 +48,7 @@ public class VoiceCommand {
         return actions;
     }
 
-    public String getId() {
+    public Integer getId() {
 
         return id;
     }

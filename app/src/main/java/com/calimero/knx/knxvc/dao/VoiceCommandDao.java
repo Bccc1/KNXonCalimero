@@ -76,7 +76,7 @@ public class VoiceCommandDao {
     public void addVoiceCommand(String name, List<KnxAction> actions){
         VoiceCommand vc = new VoiceCommand();
         vc.setActions(actions);
-        vc.setId("" + idcounter++);
+        vc.setId(idcounter++);
         vc.setName(name);
         voiceCommandsMapping.put(name,vc);
         voiceCommands.add(vc);
@@ -92,7 +92,7 @@ public class VoiceCommandDao {
         actionList.add(action);
         VoiceCommand vc = new VoiceCommand();
         vc.setActions(actionList);
-        vc.setId("" + idcounter++);
+        vc.setId(idcounter++);
         vc.setName(name);
         return vc;
     }

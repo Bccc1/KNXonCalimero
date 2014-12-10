@@ -1,4 +1,4 @@
-package com.calimero.knx.knxoncalimero.dao;
+package com.calimero.knx.knxvc.dao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,4 +1,4 @@
-package com.calimero.knx.knxoncalimero.dao;
+package com.calimero.knx.knxvc.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,9 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.speech.tts.Voice;
 
-import com.calimero.knx.knxoncalimero.VoiceCommand;
-import com.calimero.knx.knxoncalimero.core.KnxAction;
-import com.calimero.knx.knxoncalimero.core.Profile;
+import com.calimero.knx.knxvc.VoiceCommand;
+import com.calimero.knx.knxvc.core.KnxAction;
+import com.calimero.knx.knxvc.core.Profile;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

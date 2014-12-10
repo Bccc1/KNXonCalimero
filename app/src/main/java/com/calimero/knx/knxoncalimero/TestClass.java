@@ -1,4 +1,4 @@
-package com.calimero.knx.knxoncalimero;
+package com.calimero.knx.knxvc;
 
 import tuwien.auto.calimero.tools.Discover;
 

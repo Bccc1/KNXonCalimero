@@ -1,6 +1,6 @@
-package com.calimero.knx.knxoncalimero.calimero;
+package com.calimero.knx.knxvc.calimero;
 
-import com.calimero.knx.knxoncalimero.core.KnxAction;
+import com.calimero.knx.knxvc.core.KnxAction;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

@@ -1,10 +1,10 @@
-package com.calimero.knx.knxoncalimero.dao;
+package com.calimero.knx.knxvc.dao;
 
 import android.util.Log;
 
-import com.calimero.knx.knxoncalimero.VoiceCommand;
-import com.calimero.knx.knxoncalimero.core.KnxAction;
-import com.calimero.knx.knxoncalimero.core.KnxActionFactory;
+import com.calimero.knx.knxvc.VoiceCommand;
+import com.calimero.knx.knxvc.core.KnxAction;
+import com.calimero.knx.knxvc.core.KnxActionFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

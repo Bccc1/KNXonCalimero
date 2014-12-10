@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:id="@+id/voicecommand_detail"
     style="?android:attr/textAppearanceLarge" android:layout_width="match_parent"
     android:layout_height="70dp" android:padding="16dp" android:textIsSelectable="true"
-    tools:context="com.calimero.knx.knxoncalimero.VoiceCommandDetailFragment"
+    tools:context="com.calimero.knx.knxvc.VoiceCommandDetailFragment"
         android:text="Some Text" />
 
     <ListView

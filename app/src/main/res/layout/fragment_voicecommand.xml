@@ -1,14 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.calimero.knx.knxoncalimero.VoiceCommandFragment">
+    tools:context="com.calimero.knx.knxvc.VoiceCommandFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
     <fragment
         android:layout_width="160dp"
         android:layout_height="match_parent"
-        android:name="com.calimero.knx.knxoncalimero.VoiceCommandListFragment"
+        android:name="com.calimero.knx.knxvc.VoiceCommandListFragment"
         android:id="@+id/voicecommand_list"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"

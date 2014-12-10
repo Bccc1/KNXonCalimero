@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.1"
 
     defaultConfig {
-        applicationId "com.calimero.knx.knxoncalimero"
+        applicationId "com.calimero.knx.knxvc"
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 1

@@ -1,6 +1,6 @@
-package com.calimero.knx.knxoncalimero.core;
+package com.calimero.knx.knxvc.core;
 
-import com.calimero.knx.knxoncalimero.calimero.IOHandler;
+import com.calimero.knx.knxvc.calimero.IOHandler;
 
 import java.net.UnknownHostException;
 import java.util.List;

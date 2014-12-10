@@ -1,6 +1,6 @@
-package com.calimero.knx.knxoncalimero;
+package com.calimero.knx.knxvc;
 
-import com.calimero.knx.knxoncalimero.core.KnxAction;
+import com.calimero.knx.knxvc.core.KnxAction;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.calimero.knx.knxvc.dao.MasterDao;
+import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 
 
 public class MainActivity extends Activity implements VoiceControlFragment.OnVoiceControlInteractionListener, VoiceCommandFragment.OnVoiceCommandInteractionListener, VoiceCommandListFragment.Callbacks{
@@ -55,6 +56,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(1);
 
+        masterDao = new MasterDao(getApplicationContext());
     }
 
 
@@ -72,16 +74,16 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id){
+            case R.id.action_settings:
+                return true;
+            case R.id.action_add_voice_command:
+                openNewVoiceCommand();
+                return true;
+            case R.id.action_loadTestData:
+                loadTestDateIntoDB();
+                return true;
         }
-
-        if(id == R.id.action_add_voice_command) {
-            openNewVoiceCommand();
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -89,6 +91,14 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         Intent newVoiceCommandIntent = new Intent(this, AddVoiceCommandActivity.class);
         //newVoiceCommandIntent.putExtra();
         startActivity(newVoiceCommandIntent);
+    }
+
+    private void loadTestDateIntoDB(){
+        //Testdaten laden
+        VoiceCommandDao vcdao = VoiceCommandDao.getInstance();
+        for(VoiceCommand vc : vcdao.getVoiceCommands()){
+            masterDao.saveVoiceCommand(vc);
+        }
     }
 
     @Override
@@ -141,7 +151,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position){
                 case 0:
-                    return VoiceCommandFragment.newInstance(position + 1 + "", "mapping in here pls");
+                    return VoiceCommandFragment.newInstance(position + 1 + "", "mapping in here pls",masterDao);
                 case 1:
                     return VoiceControlFragment.newInstance("a","b");
                 default:

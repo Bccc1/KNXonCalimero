@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.speech.tts.Voice;
+import android.util.Log;
 
 import com.calimero.knx.knxvc.VoiceCommand;
 import com.calimero.knx.knxvc.core.KnxAction;
@@ -178,8 +179,8 @@ public class MasterDao {
         Cursor cursor = database.rawQuery(
                 "SELECT " + DatabaseHelper.KEY_ID + ", " +
                         DatabaseHelper.COL_COMMAND_TEXT + ", " +
-                        DatabaseHelper.COL_COMMAND_PROFILE + ", " + " FROM " +
-                        DatabaseHelper.TABLE_COMMAND, new String[]{});
+                        DatabaseHelper.COL_COMMAND_PROFILE + " FROM " +
+                        DatabaseHelper.TABLE_COMMAND+";", new String[]{});
         cursor.moveToFirst();
         List<VoiceCommand> voicecommand = new ArrayList<VoiceCommand>();
         while (!cursor.isAfterLast()) {

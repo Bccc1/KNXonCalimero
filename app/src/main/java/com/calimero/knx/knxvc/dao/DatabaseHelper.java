@@ -46,26 +46,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TABLE_COMMAND + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COL_COMMAND_TEXT + " TEXT NOT NULL,"
             + COL_COMMAND_PROFILE + " INTEGER NOT NULL, "
-            + "FOREIGN KEY("+COL_COMMAND_PROFILE+") REFERENCES "+TABLE_PROFILE+"("+COL_PROFILE_NAME+"))";
+            + "FOREIGN KEY("+COL_COMMAND_PROFILE+") REFERENCES "+TABLE_PROFILE+"("+COL_PROFILE_NAME+"));";
 
     // Action table create statement
     private static final String CREATE_TABLE_ACTION = "CREATE TABLE " + TABLE_ACTION
             + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COL_ACTION_NAME + " TEXT NOT NULL,"
             + COL_ACTION_GROUPADDRESS + " TEXT NOT NULL, "
-            + COL_ACTION_DATA + " TEXT NOT NULL)";
+            + COL_ACTION_DATA + " TEXT NOT NULL);";
 
     // Command_Action table create statement
     private static final String CREATE_TABLE_COMMAND_ACTION = "CREATE TABLE "
             + TABLE_COMMAND_ACTION + "("+ COL_COMMAND_ID + " INTEGER,"
             + COL_ACTION_ID + " INTEGER, PRIMARY KEY("+COL_COMMAND_ID+","+COL_ACTION_ID+"),"
             + "FOREIGN KEY("+COL_COMMAND_ID+") REFERENCES "+TABLE_COMMAND+"("+KEY_ID+"),"
-            + "FOREIGN KEY("+COL_ACTION_ID+") REFERENCES "+TABLE_ACTION+"("+KEY_ID+"))";
+            + "FOREIGN KEY("+COL_ACTION_ID+") REFERENCES "+TABLE_ACTION+"("+KEY_ID+"));";
 
     // Profile table create statement
     private static final String CREATE_TABLE_PROFILE = "CREATE TABLE "
             + TABLE_PROFILE + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + COL_PROFILE_NAME + " TEXT NOT NULL)";
+            + COL_PROFILE_NAME + " TEXT NOT NULL);";
 
 
     public DatabaseHelper(Context context) {
@@ -75,19 +75,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // creating required tables
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMAND+ ";");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTION+ ";");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMAND_ACTION+ ";");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROFILE+ ";");
+
+        db.execSQL(CREATE_TABLE_PROFILE);
         db.execSQL(CREATE_TABLE_COMMAND);
         db.execSQL(CREATE_TABLE_ACTION);
-        db.execSQL(CREATE_TABLE_COMMAND);
-        db.execSQL(CREATE_TABLE_PROFILE);
+        db.execSQL(CREATE_TABLE_COMMAND_ACTION);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // on upgrade drop older tables
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMAND);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTION);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMAND_ACTION);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROFILE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMAND+ ";");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTION+ ";");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMAND_ACTION+ ";");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROFILE+ ";");
 
         // create new tables
         onCreate(db);

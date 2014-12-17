@@ -38,7 +38,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
      */
     ViewPager mViewPager;
 
-    public MasterDao masterDao = new MasterDao(getApplicationContext());
+    public MasterDao masterDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

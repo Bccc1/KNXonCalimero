@@ -11,5 +11,6 @@
     <string name="title_section2">Befehleingabe</string>
     <string name="title_voicecommand_list">VoiceCommands</string>
     <string name="title_voicecommand_detail">VoiceCommand Detail</string>
+    <string name="action_addVC">Add Voice Control Action</string>
 
 </resources>

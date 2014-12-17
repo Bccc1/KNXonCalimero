@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.calimero.knx.knxvc.core.KnxAction;
 import com.calimero.knx.knxvc.core.KnxAdapter;
+import com.calimero.knx.knxvc.core.VoiceInterpreter;
 import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 
 import java.util.ArrayList;
@@ -111,8 +112,10 @@ public class VoiceControlFragment extends Fragment {
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             resultList.setAdapter(new ArrayAdapter<String>(this.getActivity(),
                     android.R.layout.simple_list_item_1, matches));
+            VoiceInterpreter interpreter = new VoiceInterpreter();
+            List<String>matchedList = interpreter.interpreteAll(matches);
 
-            for(String match : matches){
+            for(String match : matchedList){
                 if(vcDao.getVoiceCommandsMapping().containsKey(match)){
                     executeKNXActions(vcDao.getVoiceCommandsMapping().get(match).actions);
                     break;

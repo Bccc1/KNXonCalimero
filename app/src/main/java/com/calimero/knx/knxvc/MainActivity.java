@@ -1,5 +1,6 @@
 package com.calimero.knx.knxvc;
 
+import java.sql.SQLException;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.calimero.knx.knxvc.core.Profile;
 import com.calimero.knx.knxvc.dao.MasterDao;
 import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 
@@ -57,6 +59,11 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         mViewPager.setCurrentItem(1);
 
         masterDao = new MasterDao(getApplicationContext());
+        try {
+            masterDao.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -94,9 +101,18 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
     }
 
     private void loadTestDateIntoDB(){
+        for(VoiceCommand vc : masterDao.getAllVoiceCommand()){
+            Log.d("loadTestDateIntoDB",""+vc.id);
+        }
+
+        Profile profile = new Profile();
+        profile.setId(0);
+        profile.setName("Default");
+        masterDao.insertProfile(profile);
         //Testdaten laden
         VoiceCommandDao vcdao = VoiceCommandDao.getInstance();
         for(VoiceCommand vc : vcdao.getVoiceCommands()){
+            vc.setProfile(String.valueOf(profile.getId()));
             masterDao.saveVoiceCommand(vc);
         }
     }

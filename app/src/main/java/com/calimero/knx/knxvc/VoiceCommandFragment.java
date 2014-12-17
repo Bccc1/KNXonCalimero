@@ -99,14 +99,9 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
                     .findFragmentById(R.id.voicecommand_list);
             voiceCommandListFragment.setActivateOnItemClick(true);
             List<VoiceCommand> allVoiceCommand = null;
-            try {
-                masterDao.open();
-                allVoiceCommand = masterDao.getAllVoiceCommand();
-                //masterDao.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            if(allVoiceCommand != null){
+            allVoiceCommand = masterDao.getAllVoiceCommand();
+
+            if(!allVoiceCommand.isEmpty()){
                 voiceCommandListFragment.setListAdapter(new ArrayAdapter<VoiceCommand>(
                         getActivity(),
                         android.R.layout.simple_list_item_activated_1,

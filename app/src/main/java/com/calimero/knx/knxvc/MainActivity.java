@@ -77,7 +77,18 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
             return true;
         }
 
+        if(id == R.id.action_add_voice_command) {
+            openNewVoiceCommand();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openNewVoiceCommand(){
+        Intent newVoiceCommandIntent = new Intent(this, AddVoiceCommandActivity.class);
+        //newVoiceCommandIntent.putExtra();
+        startActivity(newVoiceCommandIntent);
     }
 
     @Override

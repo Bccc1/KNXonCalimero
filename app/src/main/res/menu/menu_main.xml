@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.calimero.knx.knxvc.MainActivity">
     <!-- Search, should appear as action button -->
-    <item android:id="@+id/action_search"
+    <item android:id="@+id/action_add_voice_command"
         android:icon="@drawable/vc_add_actionbar"
         android:title="@string/action_addVC"
         android:showAsAction="ifRoom" />

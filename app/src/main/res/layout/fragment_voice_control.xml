@@ -23,11 +23,11 @@
         android:visibility="invisible" />
 
     <Button
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="250dp"
         android:id="@+id/speakButton"
         android:layout_gravity="center"
-        android:background="@android:drawable/ic_btn_speak_now"
+        android:background="@drawable/voice_control_activate"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 

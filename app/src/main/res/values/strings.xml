@@ -12,5 +12,6 @@
     <string name="title_voicecommand_list">VoiceCommands</string>
     <string name="title_voicecommand_detail">VoiceCommand Detail</string>
     <string name="action_addVC">Add Voice Control Action</string>
+    <string name="title_activity_add_voice_command">AddVoiceCommandActivity</string>
 
 </resources>

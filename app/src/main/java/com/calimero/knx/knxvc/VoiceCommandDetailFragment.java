@@ -10,7 +10,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.calimero.knx.knxvc.core.KnxAction;
+import com.calimero.knx.knxvc.core.KnxActionFactory;
 import com.calimero.knx.knxvc.dao.VoiceCommandDao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import tuwien.auto.calimero.exception.KNXAckTimeoutException;
 
 
 /**
@@ -31,6 +37,11 @@ public class VoiceCommandDetailFragment extends Fragment {
      */
     private VoiceCommand mItem;
 
+    /** The List View */
+    ListView actionListView;
+
+    List<KnxAction> knxActionList;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -47,6 +58,7 @@ public class VoiceCommandDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             mItem = VoiceCommandDao.getInstance().getById(getArguments().getString(ARG_ITEM_ID));
+            knxActionList = KnxActionFactory.getKNXActionsAsList();
         }
     }
 
@@ -57,12 +69,27 @@ public class VoiceCommandDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
+            ArrayList<KnxAction> tempActions = new ArrayList<KnxAction>(mItem.actions);
+            for(KnxAction action : knxActionList){
+                if(!tempActions.contains(action))
+                    tempActions.add(action);
+            }
+            tempActions.add(new KnxAction("temp1"));
+            tempActions.add(new KnxAction("temp2"));
+
             ((TextView) rootView.findViewById(R.id.voicecommand_detail)).setText(mItem.name);
-            ((ListView) rootView.findViewById(R.id.actionListView)).setAdapter(new ArrayAdapter<KnxAction>(
+            actionListView = (ListView) rootView.findViewById(R.id.actionListView);
+            ArrayAdapter arrayAdapter = new ArrayAdapter<KnxAction>(
                     getActivity(),
-                    android.R.layout.simple_list_item_1,
+                    android.R.layout.simple_list_item_multiple_choice,
                     android.R.id.text1,
-                    mItem.actions));
+                    tempActions);
+            actionListView.setAdapter(arrayAdapter);
+            int pos = 0;
+            for(KnxAction knxAction : mItem.actions){
+                actionListView.setItemChecked(pos,true);
+                pos++;
+            }
         }
 
         return rootView;

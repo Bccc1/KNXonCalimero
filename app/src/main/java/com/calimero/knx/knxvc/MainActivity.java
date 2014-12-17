@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.calimero.knx.knxvc.dao.MasterDao;
+
 
 public class MainActivity extends Activity implements VoiceControlFragment.OnVoiceControlInteractionListener, VoiceCommandFragment.OnVoiceCommandInteractionListener, VoiceCommandListFragment.Callbacks{
 
@@ -36,6 +38,8 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
      */
     ViewPager mViewPager;
 
+    public MasterDao masterDao = new MasterDao(getApplicationContext());
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +53,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setCurrentItem(1);
 
     }
 
@@ -125,13 +130,9 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position){
                 case 0:
-                    return PlaceholderFragment.newInstance(position + 1,"Swipe Right for Voice Control");
+                    return VoiceCommandFragment.newInstance(position + 1 + "", "mapping in here pls");
                 case 1:
                     return VoiceControlFragment.newInstance("a","b");
-                case 2:
-                    return PlaceholderFragment.newInstance(position + 1,"Here we may implement manual control over the KNXActions");
-                case 3:
-                    return VoiceCommandFragment.newInstance(position + 1 + "", "mapping in here pls");
                 default:
                     return PlaceholderFragment.newInstance(position + 1,"");
             }
@@ -139,8 +140,8 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 4;
+            // Show 2 total pages.
+            return 2;
         }
 
         @Override
@@ -151,10 +152,6 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
                     return getString(R.string.title_section1).toUpperCase(l);
                 case 1:
                     return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
-                case 3:
-                    return getString(R.string.title_section4).toUpperCase(l);
             }
             return null;
         }

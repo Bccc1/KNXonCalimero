@@ -7,10 +7,8 @@
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="vc_start_speaking">Click the button below and start speaking</string>
-    <string name="title_section1">Instructions</string>
-    <string name="title_section2">VoiceControl</string>
-    <string name="title_section3">Manual Control</string>
-    <string name="title_section4">Mapping</string>
+    <string name="title_section1">Sprachbefehle</string>
+    <string name="title_section2">Befehleingabe</string>
     <string name="title_voicecommand_list">VoiceCommands</string>
     <string name="title_voicecommand_detail">VoiceCommand Detail</string>
 

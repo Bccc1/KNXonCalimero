@@ -99,7 +99,7 @@ public class VoiceCommandDao {
 
     public VoiceCommand getById(String id){
         for(VoiceCommand vc : voiceCommands)
-            if(vc.getId().equals(id))
+            if(vc.getId().equals(Integer.valueOf(id)))
                 return vc;
         Log.d("KNX - VCDAO", "getById(" + id + ") returned null");
         return null;

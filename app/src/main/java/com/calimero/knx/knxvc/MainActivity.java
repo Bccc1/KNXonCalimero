@@ -41,7 +41,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
      */
     ViewPager mViewPager;
 
-    public MasterDao masterDao;
+    public static MasterDao masterDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +108,6 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         Profile profile = new Profile();
         profile.setId(0);
         profile.setName("Default");
-        masterDao.insertProfile(profile);
         //Testdaten laden
         VoiceCommandDao vcdao = VoiceCommandDao.getInstance();
         for(VoiceCommand vc : vcdao.getVoiceCommands()){

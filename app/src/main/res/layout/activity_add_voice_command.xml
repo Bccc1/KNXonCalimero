@@ -12,11 +12,11 @@
         android:textSize="30dp" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editText_vc"
         android:editable="true"
-        android:enabled="true"
+        android:enabled="false"
         android:inputType="text"
         android:hint="Sprachbefehl"
         android:textColor="#ff000000"
@@ -38,7 +38,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textViewListLabel"
-        android:layout_above="@+id/button" />
+        android:layout_above="@+id/button"
+        android:choiceMode="multipleChoice" />
 
     <Button
         android:layout_width="wrap_content"

@@ -32,7 +32,8 @@
         </activity>
         <activity
             android:name=".AddVoiceCommandActivity"
-            android:label="@string/title_activity_add_voice_command" >
+            android:label="@string/title_activity_add_voice_command"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
     </application>
 

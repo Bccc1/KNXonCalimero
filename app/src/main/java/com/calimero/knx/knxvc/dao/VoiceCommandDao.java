@@ -78,6 +78,7 @@ public class VoiceCommandDao {
         vc.setActions(actions);
         vc.setId(idcounter++);
         vc.setName(name);
+        vc.setProfile("0");
         voiceCommandsMapping.put(name,vc);
         voiceCommands.add(vc);
     }
@@ -94,6 +95,7 @@ public class VoiceCommandDao {
         vc.setActions(actionList);
         vc.setId(idcounter++);
         vc.setName(name);
+        vc.setProfile("0");
         return vc;
     }
 

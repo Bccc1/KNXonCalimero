@@ -98,10 +98,10 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
             VoiceCommandListFragment voiceCommandListFragment = (VoiceCommandListFragment) getFragmentManager()
                     .findFragmentById(R.id.voicecommand_list);
             voiceCommandListFragment.setActivateOnItemClick(true);
-            /*List<VoiceCommand> allVoiceCommand = null;
-            allVoiceCommand = masterDao.getAllVoiceCommand();
+            /*List<VoiceCommand> allKnxActions = null;
+            allKnxActions = masterDao.getAllVoiceCommand();
 
-            if(!allVoiceCommand.isEmpty()){
+            if(!allKnxActions.isEmpty()){
                 voiceCommandListFragment.setListAdapter(new ArrayAdapter<VoiceCommand>(
                         getActivity(),
                         android.R.layout.simple_list_item_activated_1,

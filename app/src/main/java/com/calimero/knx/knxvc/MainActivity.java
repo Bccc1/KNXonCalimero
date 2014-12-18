@@ -1,6 +1,8 @@
 package com.calimero.knx.knxvc;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -8,6 +10,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
+import android.speech.RecognizerIntent;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -17,9 +20,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.calimero.knx.knxvc.core.Profile;
+import com.calimero.knx.knxvc.core.VoiceInterpreter;
 import com.calimero.knx.knxvc.dao.MasterDao;
 import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 
@@ -42,6 +47,8 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
     ViewPager mViewPager;
 
     public static MasterDao masterDao;
+
+    public static final int REQUEST_CODE_ADD_VC = 90;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,14 +97,22 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
             case R.id.action_loadTestData:
                 loadTestDateIntoDB();
                 return true;
+            case R.id.action_drop_db:
+                dropDatabase();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void dropDatabase(){
+        masterDao.deleteAllCommands();
+        masterDao.deleteAllActions();
     }
 
     private void openNewVoiceCommand(){
         Intent newVoiceCommandIntent = new Intent(this, AddVoiceCommandActivity.class);
         //newVoiceCommandIntent.putExtra();
-        startActivity(newVoiceCommandIntent);
+        startActivityForResult(newVoiceCommandIntent,REQUEST_CODE_ADD_VC);
     }
 
     private void loadTestDateIntoDB(){
@@ -191,6 +206,15 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
             }
             return null;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_ADD_VC && resultCode == Activity.RESULT_OK) {
+            Log.d("Main Activity","AddVCActivity Intended successfully closed");
+            //Aktualisiere VoiceCommandFragment bzw die Listview.
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**

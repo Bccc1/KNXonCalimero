@@ -94,7 +94,8 @@ public class MasterDao {
     private void insertCommandAction(VoiceCommand voicecommand){
         ContentValues values = new ContentValues();
         for(KnxAction action : voicecommand.getActions()){
-            values.put(String.valueOf(voicecommand.getId()),String.valueOf(action.getId()));
+            values.put(DatabaseHelper.COL_COMMAND_ID,String.valueOf(voicecommand.getId()));
+            values.put(DatabaseHelper.COL_ACTION_ID,String.valueOf(action.getId()));
         }
         database.insert(DatabaseHelper.TABLE_COMMAND_ACTION,null, values);
     }
@@ -115,7 +116,7 @@ public class MasterDao {
         values.put(DatabaseHelper.COL_COMMAND_PROFILE, voicecommand.getProfile());
         long id = database.insert(DatabaseHelper.TABLE_COMMAND, null, values);
         voicecommand.setId((int)id);
-        for(KnxAction action : voicecommand.getActions()){
+        for(KnxAction action : voicecommand.getActions()) {
             saveKnxAction(action);
         }
         insertCommandAction(voicecommand);

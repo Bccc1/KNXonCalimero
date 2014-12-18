@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.calimero.knx.knxvc.core.KnxAction;
+import com.calimero.knx.knxvc.core.KnxActionFactory;
 import com.calimero.knx.knxvc.core.Profile;
 import com.calimero.knx.knxvc.core.VoiceInterpreter;
 import com.calimero.knx.knxvc.dao.MasterDao;
@@ -118,8 +120,8 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
     }
 
     private void loadTestDateIntoDB(){
-        for(VoiceCommand vc : masterDao.getAllVoiceCommand()){
-            Log.d("loadTestDateIntoDB",""+vc.id);
+        for(KnxAction ac: KnxActionFactory.getKNXActionsAsList()) {
+            masterDao.saveKnxAction(ac);
         }
 
         Profile profile = new Profile();
@@ -127,6 +129,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         profile.setName("Default");
         //Testdaten laden
         VoiceCommandDao vcdao = VoiceCommandDao.getInstance();
+        vcdao.createVoiceCommandMapping();
         for(VoiceCommand vc : vcdao.getVoiceCommands()){
             vc.setProfile(String.valueOf(profile.getId()));
             masterDao.saveVoiceCommand(vc);

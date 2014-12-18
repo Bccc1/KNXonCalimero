@@ -2,6 +2,7 @@ package com.calimero.knx.knxvc.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by David on 26.11.2014.
@@ -60,10 +61,15 @@ public class KnxActionFactory {
     }
 
     public static HashMap<String, KnxAction> getKNXActionsAsMap(){
+        return convertKnxActionListTosMap(getKNXActionsAsList());
+    }
+
+    public static HashMap<String, KnxAction> convertKnxActionListTosMap(List<KnxAction> list) {
         HashMap<String, KnxAction> kal = new HashMap<String, KnxAction>();
-        for(KnxAction action : getKNXActionsAsList()){
-            kal.put(action.name,action);
+        for (KnxAction action : list) {
+            kal.put(action.name, action);
         }
         return kal;
     }
-}
+
+    }

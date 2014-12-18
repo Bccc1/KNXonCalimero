@@ -108,6 +108,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
     private void dropDatabase(){
         masterDao.deleteAllCommands();
         masterDao.deleteAllActions();
+
     }
 
     private void openNewVoiceCommand(){

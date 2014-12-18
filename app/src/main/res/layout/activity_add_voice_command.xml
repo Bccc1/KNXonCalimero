@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/editText_vc"
         android:editable="true"
-        android:enabled="false"
+        android:enabled="true"
         android:inputType="text"
         android:hint="Sprachbefehl"
         android:textColor="#ff000000"

@@ -48,7 +48,7 @@ public class KnxActionFactory {
     }
 
     private static KnxAction newAction(String name){
-        KnxAction ac = new KnxAction();
+        KnxAction ac = newAction();
         ac.setName(name);
         return ac;
     }

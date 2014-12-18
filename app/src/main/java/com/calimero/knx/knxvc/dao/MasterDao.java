@@ -113,7 +113,8 @@ public class MasterDao {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COL_COMMAND_TEXT, voicecommand.getName());
         values.put(DatabaseHelper.COL_COMMAND_PROFILE, voicecommand.getProfile());
-        database.insert(DatabaseHelper.TABLE_COMMAND, null, values);
+        long id = database.insert(DatabaseHelper.TABLE_COMMAND, null, values);
+        voicecommand.setId((int)id);
         for(KnxAction action : voicecommand.getActions()){
             saveKnxAction(action);
         }

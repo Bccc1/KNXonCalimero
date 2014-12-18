@@ -51,7 +51,6 @@ public class VoiceControlFragment extends Fragment {
     ImageView lightImage;
     Boolean lightIsOn = false;
     final String LIGHT_IS_ON_PARAM = "lightIsOn";
-
     KnxAdapter knxAdapter;
 
     VoiceCommandDao vcDao = VoiceCommandDao.getInstance();
@@ -112,7 +111,7 @@ public class VoiceControlFragment extends Fragment {
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             resultList.setAdapter(new ArrayAdapter<String>(this.getActivity(),
                     android.R.layout.simple_list_item_1, matches));
-            VoiceInterpreter interpreter = new VoiceInterpreter();
+            VoiceInterpreter interpreter = new VoiceInterpreter(MainActivity.masterDao);
             List<String>matchedList = interpreter.interpreteAll(matches);
 
             for(String match : matchedList){

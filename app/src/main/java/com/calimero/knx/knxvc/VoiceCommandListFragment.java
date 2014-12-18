@@ -9,6 +9,8 @@ import android.widget.ListView;
 
 import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 
+import java.util.List;
+
 
 /**
  * A list fragment representing a list of VoiceCommands. This fragment
@@ -21,6 +23,7 @@ import com.calimero.knx.knxvc.dao.VoiceCommandDao;
  */
 public class VoiceCommandListFragment extends ListFragment {
 
+
     /**
      * The serialization (saved instance state) Bundle key representing the
      * activated item position. Only used on tablets.
@@ -32,6 +35,8 @@ public class VoiceCommandListFragment extends ListFragment {
      * clicks.
      */
     private Callbacks mCallbacks = sDummyCallbacks;
+
+    List<VoiceCommand> voicecommands = MainActivity.masterDao.getAllVoiceCommand();
 
     /**
      * The current activated item position. Only used on tablets.
@@ -75,15 +80,16 @@ public class VoiceCommandListFragment extends ListFragment {
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                MainActivity.masterDao.getAllVoiceCommand()));
+                voicecommands));
     }
 
     public void refreshList(){
+        voicecommands = MainActivity.masterDao.getAllVoiceCommand();
         setListAdapter(new ArrayAdapter<VoiceCommand>(
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                MainActivity.masterDao.getAllVoiceCommand()));
+                voicecommands));
     }
 
     @Override
@@ -124,7 +130,8 @@ public class VoiceCommandListFragment extends ListFragment {
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         //FIXME Wechsel auf masterDao
-        mCallbacks.onItemSelected(VoiceCommandDao.getInstance().getVoiceCommands().get(position).id.toString());
+        VoiceCommand item = (VoiceCommand) getListAdapter().getItem(position);
+        mCallbacks.onItemSelected(item.id.toString());
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.calimero.knx.knxvc.core.KnxAction;
@@ -49,7 +50,9 @@ public class AddVoiceCommandActivity extends Activity {
 
     private void createVC(){
         VoiceCommand vc = new VoiceCommand();
-        vc.setName("");
+        EditText editText = (EditText) findViewById(R.id.editText_vc);
+        vc.setName(editText.getText().toString());
+        Log.d("AddVCActivity","Name is "+vc.getName());
         ArrayList<KnxAction> knxActions = new ArrayList<>();
 
         SparseBooleanArray checked = listView.getCheckedItemPositions();
@@ -60,14 +63,17 @@ public class AddVoiceCommandActivity extends Activity {
             if (value) {
                 KnxAction ac = (KnxAction) listView.getItemAtPosition(key);
                 knxActions.add(ac);
-                Log.d("AddVCActivity","Added "+ac.getName());
+                Log.d("AddVCActivity","Added action: "+ac.getName());
             }
         }
 
         vc.setActions(knxActions);
         vc.setProfile("0");
 
+
         MainActivity.masterDao.saveVoiceCommand(vc);
+
+        Log.d("AddVCActivity","Saved the vc");
         setResult(RESULT_OK);
         finish();
 

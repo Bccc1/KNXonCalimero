@@ -1,7 +1,7 @@
 package com.calimero.knx.knxvc;
 
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +10,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.calimero.knx.knxvc.core.KnxAction;
-import com.calimero.knx.knxvc.core.KnxActionFactory;
-import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import tuwien.auto.calimero.exception.KNXAckTimeoutException;
 
 
 /**
@@ -59,7 +55,7 @@ public class VoiceCommandDetailFragment extends Fragment {
             // to load content from a content provider.
             mItem = MainActivity.masterDao.getVoiceCommand(Integer.valueOf(getArguments().getString(ARG_ITEM_ID)));
             //mItem = VoiceCommandDao.getInstance().getById(getArguments().getString(ARG_ITEM_ID));
-            knxActionList = KnxActionFactory.getKNXActionsAsList();
+            knxActionList = MainActivity.masterDao.getAllKnxAction();
         }
     }
 

@@ -71,7 +71,7 @@ public class MasterDao {
         values.put(DatabaseHelper.COL_ACTION_NAME, knxaction.getName());
         values.put(DatabaseHelper.COL_ACTION_DATA, knxaction.getData());
         values.put(DatabaseHelper.COL_ACTION_GROUPADDRESS, knxaction.getGroupAddress());
-        database.update(DatabaseHelper.TABLE_ACTION,values,DatabaseHelper.KEY_ID + " = ?",
+        database.update(DatabaseHelper.TABLE_ACTION, values, DatabaseHelper.KEY_ID + " = ?",
                 new String[]{String.valueOf(knxaction.getId())});
 
     }
@@ -155,12 +155,26 @@ public class MasterDao {
                         " FROM " + DatabaseHelper.TABLE_COMMAND_ACTION +
                         " WHERE " + DatabaseHelper.COL_COMMAND_ID + " = ?", new String[]{String.valueOf(commandId)});
         cursor.moveToFirst();
-        List<KnxAction> knxaction = new ArrayList<KnxAction>();
+        List<Integer> knxActionIdList = new ArrayList<>();
         while (!cursor.isAfterLast()) {
-            knxaction.add(populateKnxAction(cursor));
+            knxActionIdList.add(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_ACTION_ID)));
             cursor.moveToNext();
         }
         cursor.close();
+        List<KnxAction> knxaction = new ArrayList<KnxAction>();
+        for(Integer id : knxActionIdList) {
+            cursor = database.rawQuery(
+                    "SELECT " + DatabaseHelper.KEY_ID + ", " +
+                            DatabaseHelper.COL_ACTION_NAME + ", " +
+                            DatabaseHelper.COL_ACTION_DATA + ", " +
+                            DatabaseHelper.COL_ACTION_GROUPADDRESS + " FROM " +
+                            DatabaseHelper.TABLE_ACTION + " WHERE " + DatabaseHelper.KEY_ID + " = ?", new String[]{String.valueOf(id)});
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                knxaction.add(populateKnxAction(cursor));
+            }
+            cursor.close();
+        }
         return knxaction;
     }
 

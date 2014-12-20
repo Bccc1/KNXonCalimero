@@ -2,12 +2,15 @@ package com.calimero.knx.knxvc;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.calimero.knx.knxvc.core.KnxAction;
 
@@ -85,8 +88,32 @@ public class VoiceCommandDetailFragment extends Fragment {
                 actionListView.setItemChecked(pos,true);
                 pos++;
             }
-        }
 
+            actionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    listViewToVoiceCommand();
+                    saveVoiceCommand();
+                }
+            });
+        }
         return rootView;
+    }
+
+    /** iterates through the listview and updates the VoiceCommand mItem */
+    private void listViewToVoiceCommand(){
+        List<KnxAction> actions = new ArrayList<KnxAction>();
+        SparseBooleanArray checkedItemPositions = actionListView.getCheckedItemPositions();
+        for(int i = 0; i<checkedItemPositions.size(); i++){
+            if(checkedItemPositions.valueAt(i)){
+                int key = checkedItemPositions.keyAt(i);
+                actions.add((KnxAction) actionListView.getAdapter().getItem(key));
+            }
+        }
+        mItem.setActions(actions);
+    }
+
+    private void saveVoiceCommand(){
+        MainActivity.masterDao.saveVoiceCommand(mItem);
     }
 }

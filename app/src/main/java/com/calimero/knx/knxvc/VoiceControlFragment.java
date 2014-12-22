@@ -112,11 +112,11 @@ public class VoiceControlFragment extends Fragment {
             resultList.setAdapter(new ArrayAdapter<String>(this.getActivity(),
                     android.R.layout.simple_list_item_1, matches));
             VoiceInterpreter interpreter = new VoiceInterpreter(MainActivity.masterDao);
-            List<String>matchedList = interpreter.interpreteAll(matches);
+            List<VoiceCommand>matchedList = interpreter.interpreteAll(matches);
 
-            for(String match : matchedList){
-                if(vcDao.getVoiceCommandsMapping().containsKey(match)){
-                    executeKNXActions(vcDao.getVoiceCommandsMapping().get(match).actions);
+            for(VoiceCommand match : matchedList){
+                if(vcDao.getVoiceCommandsMapping().containsKey(match.getName())){
+                    executeKNXActions(vcDao.getVoiceCommandsMapping().get(match.getName()).actions);
                     break;
                 }
 

@@ -103,7 +103,8 @@ public class MasterDao {
     private void updateCommandAction(VoiceCommand voicecommand){
         ContentValues values = new ContentValues();
         for(KnxAction action : voicecommand.getActions()){
-            values.put(String.valueOf(voicecommand.getId()),String.valueOf(action.getId()));
+            values.put(DatabaseHelper.COL_COMMAND_ID,String.valueOf(voicecommand.getId()));
+            values.put(DatabaseHelper.COL_ACTION_ID,String.valueOf(action.getId()));
         }
         database.delete(DatabaseHelper.TABLE_COMMAND_ACTION,DatabaseHelper.COL_COMMAND_ID + " = ?",
                 new String[]{String.valueOf(voicecommand.getId())});
@@ -217,6 +218,21 @@ public class MasterDao {
                         DatabaseHelper.COL_COMMAND_TEXT + ", " +
                         DatabaseHelper.COL_COMMAND_PROFILE + " FROM " + DatabaseHelper.TABLE_COMMAND +
                         " WHERE " + DatabaseHelper.KEY_ID + " = ?", new String[]{String.valueOf(commandId)});
+        cursor.moveToFirst();
+        VoiceCommand voicecommand = null;
+        if (!cursor.isAfterLast()) {
+            voicecommand = populateVoiceCommand(cursor);
+        }
+        cursor.close();
+        return voicecommand;
+    }
+
+    public VoiceCommand getVoiceCommandbyText(String text) {
+        Cursor cursor = database.rawQuery(
+                "SELECT " + DatabaseHelper.KEY_ID + ", " +
+                        DatabaseHelper.COL_COMMAND_TEXT + ", " +
+                        DatabaseHelper.COL_COMMAND_PROFILE + " FROM " + DatabaseHelper.TABLE_COMMAND +
+                        " WHERE " + DatabaseHelper.COL_COMMAND_TEXT + " = ?", new String[]{text});
         cursor.moveToFirst();
         VoiceCommand voicecommand = null;
         if (!cursor.isAfterLast()) {

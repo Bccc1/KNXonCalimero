@@ -2,6 +2,7 @@ package com.calimero.knx.knxvc.dao;
 
 import android.util.Log;
 
+import com.calimero.knx.knxvc.MainActivity;
 import com.calimero.knx.knxvc.VoiceCommand;
 import com.calimero.knx.knxvc.core.KnxAction;
 import com.calimero.knx.knxvc.core.KnxActionFactory;
@@ -40,9 +41,12 @@ public class VoiceCommandDao {
     private VoiceCommandDao() {
     }
 
-    private void createVoiceCommandMapping(){
+    public void createVoiceCommandMapping(){
+        voiceCommands = new ArrayList<VoiceCommand>();
+        voiceCommandsMapping = new HashMap<String, VoiceCommand>();
+
         //Hier ist erstmal ein hardgecodetes Mapping von Sprachbefehl zu KNXBefehl
-        HashMap<String, KnxAction> knxActions = KnxActionFactory.getKNXActionsAsMap();
+        HashMap<String, KnxAction> knxActions = KnxActionFactory.convertKnxActionListTosMap(MainActivity.masterDao.getAllKnxAction());
 
         addSingleActionVoiceCommand("an","Licht anschalten");
         addSingleActionVoiceCommand("aus", "Licht ausschalten");
@@ -78,12 +82,13 @@ public class VoiceCommandDao {
         vc.setActions(actions);
         vc.setId(idcounter++);
         vc.setName(name);
+        vc.setProfile("0");
         voiceCommandsMapping.put(name,vc);
         voiceCommands.add(vc);
     }
 
     private VoiceCommand singleActionVoiceCommand(String name, String action){
-        HashMap<String, KnxAction> knxActions = KnxActionFactory.getKNXActionsAsMap();
+        HashMap<String, KnxAction> knxActions = KnxActionFactory.convertKnxActionListTosMap(MainActivity.masterDao.getAllKnxAction());
         return singleActionVoiceCommand(name, knxActions.get(action));
     }
 
@@ -94,6 +99,7 @@ public class VoiceCommandDao {
         vc.setActions(actionList);
         vc.setId(idcounter++);
         vc.setName(name);
+        vc.setProfile("0");
         return vc;
     }
 

@@ -30,9 +30,11 @@ import tuwien.auto.calimero.exception.KNXException;
  * und ein Container wo in der Vergangenheit empfangene Daten abgelegt werden.
  */
 public class KnxAdapter {
-    private Activity activity = null;
+
+    private Activity activity;
     private IOHandler io;
     private BlockingQueue<KnxAction> bq = new ArrayBlockingQueue<KnxAction>(50);
+
     public KnxAdapter(Activity activity) {
         try {
             this.activity = activity;

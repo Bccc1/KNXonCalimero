@@ -8,6 +8,13 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+
+import com.calimero.knx.knxvc.dao.MasterDao;
+import com.calimero.knx.knxvc.dao.VoiceCommandDao;
+
+import java.sql.SQLException;
+import java.util.List;
 
 
 /**
@@ -27,6 +34,7 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private MasterDao masterDao;
 
     private OnVoiceCommandInteractionListener mListener;
 
@@ -45,12 +53,13 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
      * @return A new instance of fragment VoicecommandFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static VoiceCommandFragment newInstance(String param1, String param2) {
+    public static VoiceCommandFragment newInstance(String param1, String param2, MasterDao masterDao) {
         VoiceCommandFragment fragment = new VoiceCommandFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+        fragment.masterDao = masterDao;
         return fragment;
     }
 
@@ -86,9 +95,19 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-            ((VoiceCommandListFragment) getFragmentManager()
-                    .findFragmentById(R.id.voicecommand_list))
-                    .setActivateOnItemClick(true);
+            VoiceCommandListFragment voiceCommandListFragment = (VoiceCommandListFragment) getFragmentManager()
+                    .findFragmentById(R.id.voicecommand_list);
+            voiceCommandListFragment.setActivateOnItemClick(true);
+            /*List<VoiceCommand> allKnxActions = null;
+            allKnxActions = masterDao.getAllVoiceCommand();
+
+            if(!allKnxActions.isEmpty()){
+                voiceCommandListFragment.setListAdapter(new ArrayAdapter<VoiceCommand>(
+                        getActivity(),
+                        android.R.layout.simple_list_item_activated_1,
+                        android.R.id.text1,
+                        masterDao.getAllVoiceCommand()));
+            }*/
         }
     }
 

@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.calimero.knx.knxvc.core.KnxAction;
 import com.calimero.knx.knxvc.core.KnxAdapter;
+import com.calimero.knx.knxvc.core.VoiceInterpreter;
 import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 
 import java.util.ArrayList;
@@ -50,7 +51,6 @@ public class VoiceControlFragment extends Fragment {
     ImageView lightImage;
     Boolean lightIsOn = false;
     final String LIGHT_IS_ON_PARAM = "lightIsOn";
-
     KnxAdapter knxAdapter;
 
     VoiceCommandDao vcDao = VoiceCommandDao.getInstance();
@@ -111,10 +111,12 @@ public class VoiceControlFragment extends Fragment {
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             resultList.setAdapter(new ArrayAdapter<String>(this.getActivity(),
                     android.R.layout.simple_list_item_1, matches));
+            VoiceInterpreter interpreter = new VoiceInterpreter(MainActivity.masterDao);
+            List<VoiceCommand>matchedList = interpreter.interpreteAll(matches);
 
-            for(String match : matches){
-                if(vcDao.getVoiceCommandsMapping().containsKey(match)){
-                    executeKNXActions(vcDao.getVoiceCommandsMapping().get(match).actions);
+            for(VoiceCommand match : matchedList){
+                if(vcDao.getVoiceCommandsMapping().containsKey(match.getName())){
+                    executeKNXActions(vcDao.getVoiceCommandsMapping().get(match.getName()).actions);
                     break;
                 }
 

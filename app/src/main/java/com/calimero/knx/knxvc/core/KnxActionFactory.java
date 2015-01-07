@@ -2,6 +2,7 @@ package com.calimero.knx.knxvc.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by David on 26.11.2014.
@@ -13,32 +14,62 @@ import java.util.HashMap;
  */
 public class KnxActionFactory {
 
+    public static int actionIdCounter = 0;
+
+    private static ArrayList<KnxAction> actionList;
+
     public static ArrayList<KnxAction> getKNXActionsAsList(){
-        //TODO Echte Objekte des Aufbaus verwenden und Gruppenadresse und Telegramminhalt setzen.
-        ArrayList<KnxAction> kal = new ArrayList<KnxAction>();
-        //kal.add(new KnxAction("Licht anschalten"));
-        KnxAction lichtAnschalten = new KnxAction("Licht anschalten");
-        lichtAnschalten.groupAddress="1/5/1";
-        lichtAnschalten.data = "1";
-        kal.add(lichtAnschalten);
-        kal.add(new KnxAction("Licht dimmen"));
-        //kal.add(new KnxAction("Licht ausschalten"));
-        KnxAction lichtAusschalten = new KnxAction("Licht ausschalten");
-        lichtAusschalten.groupAddress = "1/5/1";
-        lichtAusschalten.data = "0";
-        kal.add(lichtAusschalten);
-        kal.add(new KnxAction("Jalousien hochfahren"));
-        kal.add(new KnxAction("Jalousien herunterfahren"));
-        kal.add(new KnxAction("Kamin entfachen"));
-        kal.add(new KnxAction("Kamin löschen"));
-        return kal;
+        if(actionList == null) {
+            //TODO Echte Objekte des Aufbaus verwenden und Gruppenadresse und Telegramminhalt setzen.
+            ArrayList<KnxAction> kal = new ArrayList<KnxAction>();
+
+            KnxAction lichtAnschalten = newAction("Licht anschalten");
+            lichtAnschalten.groupAddress = "1/5/1";
+            lichtAnschalten.data = "1";
+            kal.add(lichtAnschalten);
+            kal.add(dummyAction("Licht dimmen"));
+            KnxAction lichtAusschalten = newAction("Licht ausschalten");
+            lichtAusschalten.groupAddress = "1/5/1";
+            lichtAusschalten.data = "0";
+            kal.add(lichtAusschalten);
+            kal.add(dummyAction("Jalousien hochfahren"));
+            kal.add(dummyAction("Jalousien herunterfahren"));
+            kal.add(dummyAction("Kamin entfachen"));
+            kal.add(dummyAction("Kamin löschen"));
+            actionList = kal;
+        }
+        return actionList;
+    }
+
+    private static KnxAction dummyAction(String name){
+        KnxAction ac = newAction(name);
+        ac.setData("1");
+        ac.setGroupAddress("0/0/0");
+        return ac;
+    }
+
+    private static KnxAction newAction(String name){
+        KnxAction ac = newAction();
+        ac.setName(name);
+        return ac;
+    }
+
+    private static KnxAction newAction(){
+        KnxAction ac = new KnxAction();
+        ac.setId(actionIdCounter++);
+        return ac;
     }
 
     public static HashMap<String, KnxAction> getKNXActionsAsMap(){
+        return convertKnxActionListTosMap(getKNXActionsAsList());
+    }
+
+    public static HashMap<String, KnxAction> convertKnxActionListTosMap(List<KnxAction> list) {
         HashMap<String, KnxAction> kal = new HashMap<String, KnxAction>();
-        for(KnxAction action : getKNXActionsAsList()){
-            kal.put(action.name,action);
+        for (KnxAction action : list) {
+            kal.put(action.name, action);
         }
         return kal;
     }
-}
+
+    }

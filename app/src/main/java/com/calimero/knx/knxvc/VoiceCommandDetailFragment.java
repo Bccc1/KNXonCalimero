@@ -1,22 +1,21 @@
 package com.calimero.knx.knxvc;
 
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.calimero.knx.knxvc.core.KnxAction;
-import com.calimero.knx.knxvc.core.KnxActionFactory;
-import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import tuwien.auto.calimero.exception.KNXAckTimeoutException;
 
 
 /**
@@ -57,8 +56,9 @@ public class VoiceCommandDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = VoiceCommandDao.getInstance().getById(getArguments().getString(ARG_ITEM_ID));
-            knxActionList = KnxActionFactory.getKNXActionsAsList();
+            mItem = MainActivity.masterDao.getVoiceCommand(Integer.valueOf(getArguments().getString(ARG_ITEM_ID)));
+            //mItem = VoiceCommandDao.getInstance().getById(getArguments().getString(ARG_ITEM_ID));
+            knxActionList = MainActivity.masterDao.getAllKnxAction();
         }
     }
 
@@ -74,14 +74,12 @@ public class VoiceCommandDetailFragment extends Fragment {
                 if(!tempActions.contains(action))
                     tempActions.add(action);
             }
-            tempActions.add(new KnxAction("temp1"));
-            tempActions.add(new KnxAction("temp2"));
 
             ((TextView) rootView.findViewById(R.id.voicecommand_detail)).setText(mItem.name);
             actionListView = (ListView) rootView.findViewById(R.id.actionListView);
             ArrayAdapter arrayAdapter = new ArrayAdapter<KnxAction>(
                     getActivity(),
-                    android.R.layout.simple_list_item_multiple_choice,
+                    android.R.layout.simple_list_item_activated_1,
                     android.R.id.text1,
                     tempActions);
             actionListView.setAdapter(arrayAdapter);
@@ -90,8 +88,32 @@ public class VoiceCommandDetailFragment extends Fragment {
                 actionListView.setItemChecked(pos,true);
                 pos++;
             }
-        }
 
+            actionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    listViewToVoiceCommand();
+                    saveVoiceCommand();
+                }
+            });
+        }
         return rootView;
+    }
+
+    /** iterates through the listview and updates the VoiceCommand mItem */
+    private void listViewToVoiceCommand(){
+        List<KnxAction> actions = new ArrayList<KnxAction>();
+        SparseBooleanArray checkedItemPositions = actionListView.getCheckedItemPositions();
+        for(int i = 0; i<checkedItemPositions.size(); i++){
+            if(checkedItemPositions.valueAt(i)){
+                int key = checkedItemPositions.keyAt(i);
+                actions.add((KnxAction) actionListView.getAdapter().getItem(key));
+            }
+        }
+        mItem.setActions(actions);
+    }
+
+    private void saveVoiceCommand(){
+        MainActivity.masterDao.saveVoiceCommand(mItem);
     }
 }

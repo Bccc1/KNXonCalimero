@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.speech.tts.Voice;
+import android.util.Log;
 
 import com.calimero.knx.knxvc.VoiceCommand;
 import com.calimero.knx.knxvc.core.KnxAction;
@@ -35,6 +36,7 @@ public class MasterDao {
 
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
+        Boolean test = database.isOpen();
     }
 
     public void close() {
@@ -69,7 +71,7 @@ public class MasterDao {
         values.put(DatabaseHelper.COL_ACTION_NAME, knxaction.getName());
         values.put(DatabaseHelper.COL_ACTION_DATA, knxaction.getData());
         values.put(DatabaseHelper.COL_ACTION_GROUPADDRESS, knxaction.getGroupAddress());
-        database.update(DatabaseHelper.TABLE_ACTION,values,DatabaseHelper.KEY_ID + " = ?",
+        database.update(DatabaseHelper.TABLE_ACTION, values, DatabaseHelper.KEY_ID + " = ?",
                 new String[]{String.valueOf(knxaction.getId())});
 
     }
@@ -92,7 +94,8 @@ public class MasterDao {
     private void insertCommandAction(VoiceCommand voicecommand){
         ContentValues values = new ContentValues();
         for(KnxAction action : voicecommand.getActions()){
-            values.put(String.valueOf(voicecommand.getId()),String.valueOf(action.getId()));
+            values.put(DatabaseHelper.COL_COMMAND_ID,String.valueOf(voicecommand.getId()));
+            values.put(DatabaseHelper.COL_ACTION_ID,String.valueOf(action.getId()));
         }
         database.insert(DatabaseHelper.TABLE_COMMAND_ACTION,null, values);
     }
@@ -100,7 +103,8 @@ public class MasterDao {
     private void updateCommandAction(VoiceCommand voicecommand){
         ContentValues values = new ContentValues();
         for(KnxAction action : voicecommand.getActions()){
-            values.put(String.valueOf(voicecommand.getId()),String.valueOf(action.getId()));
+            values.put(DatabaseHelper.COL_COMMAND_ID,String.valueOf(voicecommand.getId()));
+            values.put(DatabaseHelper.COL_ACTION_ID,String.valueOf(action.getId()));
         }
         database.delete(DatabaseHelper.TABLE_COMMAND_ACTION,DatabaseHelper.COL_COMMAND_ID + " = ?",
                 new String[]{String.valueOf(voicecommand.getId())});
@@ -111,7 +115,11 @@ public class MasterDao {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COL_COMMAND_TEXT, voicecommand.getName());
         values.put(DatabaseHelper.COL_COMMAND_PROFILE, voicecommand.getProfile());
-        database.insert(DatabaseHelper.TABLE_COMMAND, null, values);
+        long id = database.insert(DatabaseHelper.TABLE_COMMAND, null, values);
+        voicecommand.setId((int)id);
+        for(KnxAction action : voicecommand.getActions()) {
+            saveKnxAction(action);
+        }
         insertCommandAction(voicecommand);
     }
 
@@ -144,16 +152,30 @@ public class MasterDao {
     public List<KnxAction> getAllKnxActionFromCommand(int commandId) {
         Cursor cursor = database.rawQuery(
                 "SELECT " + DatabaseHelper.COL_COMMAND_ID + ", " +
-                        DatabaseHelper.COL_ACTION_ID + ", " +
+                        DatabaseHelper.COL_ACTION_ID +
                         " FROM " + DatabaseHelper.TABLE_COMMAND_ACTION +
                         " WHERE " + DatabaseHelper.COL_COMMAND_ID + " = ?", new String[]{String.valueOf(commandId)});
         cursor.moveToFirst();
-        List<KnxAction> knxaction = new ArrayList<KnxAction>();
+        List<Integer> knxActionIdList = new ArrayList<>();
         while (!cursor.isAfterLast()) {
-            knxaction.add(populateKnxAction(cursor));
+            knxActionIdList.add(cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COL_ACTION_ID)));
             cursor.moveToNext();
         }
         cursor.close();
+        List<KnxAction> knxaction = new ArrayList<KnxAction>();
+        for(Integer id : knxActionIdList) {
+            cursor = database.rawQuery(
+                    "SELECT " + DatabaseHelper.KEY_ID + ", " +
+                            DatabaseHelper.COL_ACTION_NAME + ", " +
+                            DatabaseHelper.COL_ACTION_DATA + ", " +
+                            DatabaseHelper.COL_ACTION_GROUPADDRESS + " FROM " +
+                            DatabaseHelper.TABLE_ACTION + " WHERE " + DatabaseHelper.KEY_ID + " = ?", new String[]{String.valueOf(id)});
+            cursor.moveToFirst();
+            if (!cursor.isAfterLast()) {
+                knxaction.add(populateKnxAction(cursor));
+            }
+            cursor.close();
+        }
         return knxaction;
     }
 
@@ -178,8 +200,8 @@ public class MasterDao {
         Cursor cursor = database.rawQuery(
                 "SELECT " + DatabaseHelper.KEY_ID + ", " +
                         DatabaseHelper.COL_COMMAND_TEXT + ", " +
-                        DatabaseHelper.COL_COMMAND_PROFILE + ", " + " FROM " +
-                        DatabaseHelper.TABLE_COMMAND, new String[]{});
+                        DatabaseHelper.COL_COMMAND_PROFILE + " FROM " +
+                        DatabaseHelper.TABLE_COMMAND+";", new String[]{});
         cursor.moveToFirst();
         List<VoiceCommand> voicecommand = new ArrayList<VoiceCommand>();
         while (!cursor.isAfterLast()) {
@@ -190,13 +212,11 @@ public class MasterDao {
         return voicecommand;
     }
 
-
-
     public VoiceCommand getVoiceCommand(int commandId) {
         Cursor cursor = database.rawQuery(
                 "SELECT " + DatabaseHelper.KEY_ID + ", " +
                         DatabaseHelper.COL_COMMAND_TEXT + ", " +
-                        DatabaseHelper.COL_COMMAND_PROFILE + ", " + " FROM " + DatabaseHelper.TABLE_COMMAND +
+                        DatabaseHelper.COL_COMMAND_PROFILE + " FROM " + DatabaseHelper.TABLE_COMMAND +
                         " WHERE " + DatabaseHelper.KEY_ID + " = ?", new String[]{String.valueOf(commandId)});
         cursor.moveToFirst();
         VoiceCommand voicecommand = null;
@@ -205,6 +225,69 @@ public class MasterDao {
         }
         cursor.close();
         return voicecommand;
+    }
+
+    public VoiceCommand getVoiceCommandbyText(String text) {
+        Cursor cursor = database.rawQuery(
+                "SELECT " + DatabaseHelper.KEY_ID + ", " +
+                        DatabaseHelper.COL_COMMAND_TEXT + ", " +
+                        DatabaseHelper.COL_COMMAND_PROFILE + " FROM " + DatabaseHelper.TABLE_COMMAND +
+                        " WHERE " + DatabaseHelper.COL_COMMAND_TEXT + " = ?", new String[]{text});
+        cursor.moveToFirst();
+        VoiceCommand voicecommand = null;
+        if (!cursor.isAfterLast()) {
+            voicecommand = populateVoiceCommand(cursor);
+        }
+        cursor.close();
+        return voicecommand;
+    }
+
+    public void deleteProfile(int id){
+        database.delete(DatabaseHelper.TABLE_PROFILE, DatabaseHelper.KEY_ID + "=" + id, null);
+    }
+
+    public void deleteVoiceCommand(int id){
+        database.delete(DatabaseHelper.TABLE_COMMAND_ACTION, DatabaseHelper.COL_COMMAND_ID + "=" + id, null);
+        database.delete(DatabaseHelper.TABLE_COMMAND, DatabaseHelper.KEY_ID + "=" + id, null);
+    }
+
+    public void deleteAction(int id){
+        database.delete(DatabaseHelper.TABLE_COMMAND_ACTION, DatabaseHelper.COL_ACTION_ID + "=" + id, null);
+        database.delete(DatabaseHelper.TABLE_ACTION, DatabaseHelper.KEY_ID + "=" + id, null);
+    }
+
+    public void deleteAllProfiles(){
+        database.delete(DatabaseHelper.TABLE_PROFILE, null, null);
+    }
+
+    public void deleteAllActions(){
+        database.delete(DatabaseHelper.TABLE_COMMAND_ACTION, null, null);
+        database.delete(DatabaseHelper.TABLE_ACTION, null, null);
+    }
+
+    public void deleteAllCommands(){
+        database.delete(DatabaseHelper.TABLE_COMMAND_ACTION, null, null);
+        database.delete(DatabaseHelper.TABLE_COMMAND, null, null);
+    }
+
+    public void insertProfile(Profile profile){
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.COL_PROFILE_NAME, profile.getName());
+        database.insert(DatabaseHelper.TABLE_PROFILE, null, values);
+    }
+
+    public Profile getProfile(int profileId) {
+        Cursor cursor = database.rawQuery(
+                "SELECT " + DatabaseHelper.KEY_ID + ", " +
+                        DatabaseHelper.COL_PROFILE_NAME + " FROM " + DatabaseHelper.TABLE_PROFILE +
+                        " WHERE " + DatabaseHelper.KEY_ID + " = ?", new String[]{String.valueOf(profileId)});
+        cursor.moveToFirst();
+        Profile profile = null;
+        if (!cursor.isAfterLast()) {
+            profile = populateProfile(cursor);
+        }
+        cursor.close();
+        return profile;
     }
 
     private KnxAction populateKnxAction(Cursor cursor) {
@@ -245,26 +328,6 @@ public class MasterDao {
         profile.setId(cursor.getInt(idIndex));
         profile.setName(cursor.getString(nameIndex));
 
-        return profile;
-    }
-
-    public void insertProfile(Profile profile){
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COL_PROFILE_NAME, profile.getName());
-        database.insert(DatabaseHelper.TABLE_PROFILE, null, values);
-    }
-
-    public Profile getProfile(int profileId) {
-        Cursor cursor = database.rawQuery(
-                "SELECT " + DatabaseHelper.KEY_ID + ", " +
-                        DatabaseHelper.COL_PROFILE_NAME + ", " + " FROM " + DatabaseHelper.TABLE_PROFILE +
-                        " WHERE " + DatabaseHelper.KEY_ID + " = ?", new String[]{String.valueOf(profileId)});
-        cursor.moveToFirst();
-        Profile profile = null;
-        if (!cursor.isAfterLast()) {
-            profile = populateProfile(cursor);
-        }
-        cursor.close();
         return profile;
     }
 }

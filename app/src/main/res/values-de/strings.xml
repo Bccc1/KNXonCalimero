@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KNXVC</string>
+    <string name="title_activity_add_voice_command">Sprachbefehl hinzufügen</string>
+    <string name="vc_start_speaking">Klicke den Button und sprech den Befehl</string>
+    <string name="action_settings">Einstellungen</string>
+</resources>

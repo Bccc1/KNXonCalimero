@@ -1,10 +1,18 @@
 package com.calimero.knx.knxvc.calimero;
 
+import android.app.Activity;
+import android.widget.Toast;
+
+import com.calimero.knx.knxoncalimero.Container;
+import com.calimero.knx.knxoncalimero.KnxBusConnection;
+import com.calimero.knx.knxoncalimero.knxobject.KnxBooleanObject;
 import com.calimero.knx.knxvc.core.KnxAction;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -21,15 +29,19 @@ import tuwien.auto.calimero.process.ProcessCommunicatorImpl;
  *
  * Created by Jonas on 03.12.2014.
  */
-public class IOHandler extends Thread {
+public class IOHandler extends Thread implements Observer{
 
     /** Collection of telegram data to be sent on the bus. Must be filled outside of this class. */
     private final BlockingQueue<KnxAction> outboundData;
     private final BlockingQueue<String> inboundData;
+    private final Activity activity;
 
     private String hostIp = "192.168.10.132", gatewayIp;
     private KNXNetworkLinkIP networkLinkIp;
     private ProcessCommunicator communicator;
+    private KnxBusConnection connectionRunnable;
+    private Container busActionContainer;
+    private Container resultContainer;
 
     /**
      * Creates a new {@lnk IOHandler} with an open connection.
@@ -37,15 +49,17 @@ public class IOHandler extends Thread {
      * {@link BlockingQueue} for new {@link KnxAction} objects ready to be sent on the bus.
      *
      * @param gatewayIp - the target ip address
-     * @param outboundData - the {@link BlockingQueue} that {@link KnxAction} objects will
+     * @param outboundData - the {@link java.util.concurrent.BlockingQueue} that {@link com.calimero.knx.knxvc.core.KnxAction} objects will
      *                     be added to
+     * @param activity
      * @throws KNXException - if the KNX connection could not be established
      * @throws UnknownHostException - if the host data is invalid
      */
-    public IOHandler (String gatewayIp, BlockingQueue<KnxAction> outboundData) throws KNXException, UnknownHostException {
+    public IOHandler(String gatewayIp, BlockingQueue<KnxAction> outboundData, Activity activity) throws KNXException, UnknownHostException {
 
         this.gatewayIp = gatewayIp;
         this.outboundData = outboundData;
+        this.activity = activity;
         this.inboundData = new ArrayBlockingQueue<String>(4096);
     }
 
@@ -58,6 +72,15 @@ public class IOHandler extends Thread {
                 false,
                 new TPSettings(false));
         this.communicator = new ProcessCommunicatorImpl(networkLinkIp);
+
+
+        busActionContainer = new Container();
+        resultContainer = new Container();
+        resultContainer.addObserver(this);
+        connectionRunnable = new KnxBusConnection("192.168.10.123", this.gatewayIp, busActionContainer, resultContainer);
+        connectionRunnable.addObserver(this);
+        Thread connectionThread = new Thread(connectionRunnable);
+        connectionThread.start();
     }
 
     @Override
@@ -117,6 +140,24 @@ public class IOHandler extends Thread {
             }
         } catch (KNXException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+
+        // connection status message
+        String message = null;
+        if (observable.equals(connectionRunnable)) {
+            message = "KNX Connection "
+                    + ((connectionRunnable.isConnected()) ? "" : "not ")
+                    + " successful.";
+        } else if (observable.equals(resultContainer) && data instanceof KnxBooleanObject) {
+            final boolean read = ((KnxBooleanObject) data).getValue();
+            message = "KNX data '" + read + "' received.";
+        }
+        if (message != null) {
+            Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 }

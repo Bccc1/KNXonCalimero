@@ -44,6 +44,9 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
      */
     private boolean mTwoPane;
 
+    /** Das Fragment in welchem die VoiceCommands gelistet sind */
+    private VoiceCommandListFragment voiceCommandListFragment;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -95,7 +98,7 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-            VoiceCommandListFragment voiceCommandListFragment = (VoiceCommandListFragment) getFragmentManager()
+            voiceCommandListFragment = (VoiceCommandListFragment) getFragmentManager()
                     .findFragmentById(R.id.voicecommand_list);
             voiceCommandListFragment.setActivateOnItemClick(true);
             /*List<VoiceCommand> allKnxActions = null;
@@ -175,6 +178,10 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
             detailIntent.putExtra(VoiceCommandDetailFragment.ARG_ITEM_ID, id);
             startActivity(detailIntent);
         }
+    }
+
+    public void refresh(){
+        voiceCommandListFragment.refreshList();
     }
 
 }

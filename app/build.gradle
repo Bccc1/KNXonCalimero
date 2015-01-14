@@ -23,8 +23,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/calimero-tools-2.0.2.jar')
     compile files('libs/calimero-2.0.4.jar')
-    compile 'com.android.support:support-v13:21.0.2'
-    compile 'com.android.support:support-v4:21.0.2'
     compile files('src/main/libs/calimero-2.0.4.jar')
     compile files('src/main/libs/calimero-tools-2.0.2.jar')
+    compile 'com.android.support:support-v13:21.0.3'
+    compile 'com.android.support:support-v4:21.0.3'
 }

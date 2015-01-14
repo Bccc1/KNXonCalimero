@@ -88,12 +88,6 @@ public class VoiceCommandDetailFragment extends Fragment {
                 actionListView.setItemChecked(pos,true);
                 pos++;
             }
-<<<<<<< Updated upstream
-=======
-
-            //TODO Listener implementieren, der bei Änderung der Liste die Änderungen in mItem übernimmt und dann MainActivity.masterDao.saveVoiceCommand(mItem);
-        }
->>>>>>> Stashed changes
 
             actionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

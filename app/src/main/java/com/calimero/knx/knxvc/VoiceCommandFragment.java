@@ -1,10 +1,13 @@
 package com.calimero.knx.knxvc;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +46,10 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
      * device.
      */
     private boolean mTwoPane;
+
+    /** Das Fragment in welchem die VoiceCommands gelistet sind */
+    private VoiceCommandListFragment voiceCommandListFragment;
+    private String TAG = "VoiceCommandFragment";
 
     /**
      * Use this factory method to create a new instance of
@@ -83,6 +90,22 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
         return inflater.inflate(R.layout.fragment_voicecommand, container, false);
     }
 
+    private FragmentManager getSdkDependentFragmentManager(){
+        FragmentManager fm = null;
+
+        Log.d(TAG, "sdk: " + Build.VERSION.SDK_INT);
+        Log.d(TAG, "release: " + Build.VERSION.RELEASE);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            Log.d(TAG, "using getFragmentManager");
+            fm = getFragmentManager();
+        } else {
+            Log.d(TAG, "using getChildFragmentManager");
+            fm = getChildFragmentManager();
+        }
+        return fm;
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -95,7 +118,7 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
 
             // In two-pane mode, list items should be given the
             // 'activated' state when touched.
-            VoiceCommandListFragment voiceCommandListFragment = (VoiceCommandListFragment) getFragmentManager()
+            voiceCommandListFragment = (VoiceCommandListFragment) getSdkDependentFragmentManager()
                     .findFragmentById(R.id.voicecommand_list);
             voiceCommandListFragment.setActivateOnItemClick(true);
             /*List<VoiceCommand> allKnxActions = null;
@@ -175,6 +198,10 @@ public class VoiceCommandFragment extends Fragment implements VoiceCommandListFr
             detailIntent.putExtra(VoiceCommandDetailFragment.ARG_ITEM_ID, id);
             startActivity(detailIntent);
         }
+    }
+
+    public void refresh(){
+        voiceCommandListFragment.refreshList();
     }
 
 }

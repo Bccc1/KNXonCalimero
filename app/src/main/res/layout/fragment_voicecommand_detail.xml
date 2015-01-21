@@ -10,6 +10,16 @@
     tools:context="com.calimero.knx.knxvc.VoiceCommandDetailFragment"
         android:text="Some Text" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Execute"
+        android:id="@+id/fragment_voicecommand_detail_btn_execute"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

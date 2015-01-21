@@ -59,6 +59,8 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
 
     public static final int REQUEST_CODE_ADD_VC = 90;
 
+    VoiceCommandFragment voiceCommandFragment = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +127,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
 
         switch(id){
             case R.id.action_settings:
+                openSettings();
                 return true;
             case R.id.action_add_voice_command:
                 openNewVoiceCommand();
@@ -139,10 +142,15 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         return super.onOptionsItemSelected(item);
     }
 
+    private void openSettings() {
+        Intent intent = new Intent(this,SettingsActivity.class);
+        startActivity(intent);
+    }
+
     private void dropDatabase(){
         masterDao.deleteAllCommands();
         masterDao.deleteAllActions();
-
+        voiceCommandFragment.refresh();
     }
 
     private void openNewVoiceCommand(){
@@ -166,6 +174,8 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
             vc.setProfile(String.valueOf(profile.getId()));
             masterDao.saveVoiceCommand(vc);
         }
+
+        voiceCommandFragment.refresh();
     }
 
     @Override
@@ -218,7 +228,8 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position){
                 case 0:
-                    return VoiceCommandFragment.newInstance(position + 1 + "", "mapping in here pls",masterDao);
+                    voiceCommandFragment = VoiceCommandFragment.newInstance(position + 1 + "", "mapping in here pls",masterDao);
+                    return voiceCommandFragment;
                 case 1:
                     return VoiceControlFragment.newInstance("a","b");
                 default:
@@ -249,7 +260,8 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_ADD_VC && resultCode == Activity.RESULT_OK) {
             Log.d("Main Activity","AddVCActivity Intended successfully closed");
-            //Aktualisiere VoiceCommandFragment bzw die Listview.
+            //TODO Aktualisiere VoiceCommandFragment bzw die Listview.
+            voiceCommandFragment.refresh();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

@@ -6,9 +6,10 @@ import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
-import com.calimero.knx.knxvc.calimero.IOHandler;
 import com.calimero.knx.knxvc.calimero.connection.sys.KnxCommunicationObject;
+
 
 import java.net.UnknownHostException;
 import java.util.List;
@@ -47,16 +48,19 @@ public class KnxAdapter {
     private static Activity activity;
     private String knx_gateway_ip = null;
     private  KnxCommunicationObject knxCommunicationObject = null;
-    private IOHandler io;
     private BlockingQueue<KnxAction> bq = new ArrayBlockingQueue<KnxAction>(50);
 
     public KnxAdapter(Activity activity) {
         this.activity = activity;
-        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        //SharedPreferences defaultSharedPreferences = activity.getSharedPreferences("knx_settings",Context.MODE_PRIVATE);
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         knx_gateway_ip = defaultSharedPreferences.getString("knx_gateway_ip", null);
+        knx_gateway_ip = "192.168.10.28";
+
         try {
         //this.io = new IOHandler("192.168.10.28", bq, this.activity);
             //io.start();
+            Log.d("KnxAdapter", "KnxGatewayIp: " + knx_gateway_ip);
             knxCommunicationObject = KnxCommunicationObject.getInstance(getIP(), knx_gateway_ip);
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -79,11 +83,14 @@ public class KnxAdapter {
     public void executeKnxAction(KnxAction action){
         try {
             GroupAddress groupAddress = new GroupAddress(action.getGroupAddress());
-            knxCommunicationObject.writeBoolean(groupAddress,Boolean.parseBoolean(action.getData()));
-        } catch (KNXFormatException e) {
+//            GroupAddress ga = new GroupAddress(1,5,11);
+            Boolean data = action.getData().equals("0") ? false : true;
+            knxCommunicationObject.writeBoolean(groupAddress, data);
+//            knxCommunicationObject.writeBoolean(ga,true);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        bq.add(action);
+        //bq.add(action);
     }
 
     public void executeKnxActions(List<KnxAction> actions){

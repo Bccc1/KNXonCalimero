@@ -31,32 +31,67 @@ public class VoiceInterpreter {
 //       return commandList;
 //   }
     public List<VoiceCommand> interpreteAll(List<String> commandList){
-        Set<VoiceCommand> resultVoiceCommandList = new HashSet<>();
+        List<VoiceCommand> resultVoiceCommandList = new ArrayList<>();
        if (masterDao!=null) {
            List<VoiceCommand> voiceCommandList = masterDao.getAllVoiceCommand();
+           ArrayList<String> voiceCommandNameList = new ArrayList<String>();
+           for (VoiceCommand command : voiceCommandList) {
+               voiceCommandNameList.add(command.getName());
+           }
            for (String command : commandList) {
-               String[] splittedCommand = command.split("und");
-               if (splittedCommand.length == 1 && voiceCommandList.contains(splittedCommand[0])) {
-                   resultVoiceCommandList.add(masterDao.getVoiceCommandbyText(splittedCommand[0]));
-               } else {
-                   for (int i = 0; i < splittedCommand.length - 1; i++) {
-                       String interpretedCommand= splittedCommand[i] + " " + splittedCommand[splittedCommand.length - 1];
-                       if (voiceCommandList.contains(interpretedCommand)) {
-                           resultVoiceCommandList.add(masterDao.getVoiceCommandbyText(interpretedCommand));
+               for (String voiceCommand : voiceCommandNameList) {
+                   String[] splittedCommand = command.split("und");
+                   if (splittedCommand.length == 1 && voiceCommand.toLowerCase().replaceAll(" ", "").equals(splittedCommand[0].toLowerCase().replaceAll(" ", ""))) {
+                       if(!isCommandExisting(voiceCommand,resultVoiceCommandList)) {
+                           resultVoiceCommandList.add(masterDao.getVoiceCommandbyText(voiceCommand));
                        }
-                       interpretedCommand=splittedCommand[i];
-                       if (voiceCommandList.contains(interpretedCommand)) {
-                           resultVoiceCommandList.add(masterDao.getVoiceCommandbyText(interpretedCommand));
-                       }
-                       interpretedCommand = splittedCommand[i + 1];
-                       if (voiceCommandList.contains(interpretedCommand)) {
-                           resultVoiceCommandList.add(masterDao.getVoiceCommandbyText(interpretedCommand));
+                   } else {
+                       for (int i = 0; i < splittedCommand.length - 1; i++) {
+                           String interpretedCommand = splittedCommand[i] + " " + splittedCommand[splittedCommand.length - 1];
+                           if (voiceCommand.toLowerCase().replaceAll(" ","").equals(interpretedCommand.toLowerCase().replaceAll(" ", ""))) {
+                               if(!isCommandExisting(voiceCommand,resultVoiceCommandList)) {
+                                   resultVoiceCommandList.add(masterDao.getVoiceCommandbyText(voiceCommand));
+                               }
+                           }
+                           else{
+                               String[] splittedLastCommand = splittedCommand[splittedCommand.length-1].split(" ");
+                               interpretedCommand = splittedCommand[i] + " " + splittedLastCommand[splittedLastCommand.length - 1];
+                               if (voiceCommand.toLowerCase().replaceAll(" ", "").equals(interpretedCommand.toLowerCase().replaceAll(" ", ""))) {
+                                   if(!isCommandExisting(voiceCommand,resultVoiceCommandList)) {
+                                       resultVoiceCommandList.add(masterDao.getVoiceCommandbyText(voiceCommand));
+                                   }
+                               }
+                           }
+                           interpretedCommand = splittedCommand[i];
+                           if (voiceCommand.toLowerCase().replaceAll(" ", "").equals(interpretedCommand.toLowerCase().replaceAll(" ", ""))) {
+                               if(!isCommandExisting(voiceCommand,resultVoiceCommandList)) {
+                                   resultVoiceCommandList.add(masterDao.getVoiceCommandbyText(voiceCommand));
+                               }
+                           }
+                           interpretedCommand = splittedCommand[i + 1];
+                           if (voiceCommand.toLowerCase().replaceAll(" ", "").equals(interpretedCommand.toLowerCase().replaceAll(" ", ""))) {
+                               if(!isCommandExisting(voiceCommand,resultVoiceCommandList)) {
+                                   resultVoiceCommandList.add(masterDao.getVoiceCommandbyText(voiceCommand));
+                               }
+                           }
                        }
                    }
                }
-
            }
        }
-        return new ArrayList<>(resultVoiceCommandList);
+        return resultVoiceCommandList;
+    }
+
+    private Boolean isCommandExisting(String commandName, List<VoiceCommand> voiceCommandList) {
+        Boolean isExisting = false;
+        if (masterDao != null) {
+            for (VoiceCommand voiceCommand : voiceCommandList) {
+                if (commandName.equals(voiceCommand.getName())) {
+                    isExisting = true;
+                    break;
+                }
+            }
+        }
+        return isExisting;
     }
 }

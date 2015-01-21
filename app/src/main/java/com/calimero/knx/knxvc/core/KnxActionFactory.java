@@ -23,19 +23,13 @@ public class KnxActionFactory {
             //TODO Echte Objekte des Aufbaus verwenden und Gruppenadresse und Telegramminhalt setzen.
             ArrayList<KnxAction> kal = new ArrayList<KnxAction>();
 
-            KnxAction lichtAnschalten = newAction("Licht anschalten");
-            lichtAnschalten.groupAddress = "1/5/1";
-            lichtAnschalten.data = "1";
-            kal.add(lichtAnschalten);
-            kal.add(dummyAction("Licht dimmen"));
-            KnxAction lichtAusschalten = newAction("Licht ausschalten");
-            lichtAusschalten.groupAddress = "1/5/1";
-            lichtAusschalten.data = "0";
-            kal.add(lichtAusschalten);
-            kal.add(dummyAction("Jalousien hochfahren"));
-            kal.add(dummyAction("Jalousien herunterfahren"));
-            kal.add(dummyAction("Kamin entfachen"));
-            kal.add(dummyAction("Kamin löschen"));
+            kal.add(newAction("Licht Oben Ein","1/5/10","1"));
+            kal.add(newAction("Licht Oben Aus","1/5/10","0"));
+            kal.add(newAction("Licht Mitte/Unten Ein","1/5/11","1"));
+            kal.add(newAction("Licht Mitte/Unten Aus","1/5/11","0"));
+
+            kal.add(newAction("Jalousie-Langezeitfahren hoch","1/1/5","1"));
+            kal.add(newAction("Jalousie-Langezeitfahren runter","1/1/5","0"));
             actionList = kal;
         }
         return actionList;
@@ -51,6 +45,14 @@ public class KnxActionFactory {
     private static KnxAction newAction(String name){
         KnxAction ac = newAction();
         ac.setName(name);
+        return ac;
+    }
+
+    private static KnxAction newAction(String name, String groupAddress, String data){
+        KnxAction ac = newAction();
+        ac.setName(name);
+        ac.setGroupAddress(groupAddress);
+        ac.setData(data);
         return ac;
     }
 

@@ -1,6 +1,8 @@
 package com.calimero.knx.knxvc.calimero.connection.sys;
 
 
+import android.util.Log;
+
 import com.calimero.knx.knxvc.calimero.connection.exception.NotInResultsException;
 import com.calimero.knx.knxvc.calimero.connection.knxobject.KnxBooleanObject;
 import com.calimero.knx.knxvc.calimero.connection.knxobject.KnxComparableObject;
@@ -134,6 +136,7 @@ public class KnxCommunicationObject extends Observable implements Observer {
     }
 
     public static KnxCommunicationObject getInstance(String hostIp, String gatewayIp) throws UnknownHostException {
+        Log.i("KnxCommunicationObject","getInstance called");
         return getInstance(hostIp, gatewayIp, KNXnetIPConnection.IP_PORT);
     }
 

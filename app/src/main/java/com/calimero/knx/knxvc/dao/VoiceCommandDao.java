@@ -48,20 +48,18 @@ public class VoiceCommandDao {
         //Hier ist erstmal ein hardgecodetes Mapping von Sprachbefehl zu KNXBefehl
         HashMap<String, KnxAction> knxActions = KnxActionFactory.convertKnxActionListTosMap(MainActivity.masterDao.getAllKnxAction());
 
-        addSingleActionVoiceCommand("an","Licht anschalten");
-        addSingleActionVoiceCommand("aus", "Licht ausschalten");
-        addSingleActionVoiceCommand("Licht an", "Licht anschalten");
-        addSingleActionVoiceCommand("Licht aus", "Licht ausschalten");
-        addSingleActionVoiceCommand("Licht dimmen", "Licht dimmen");
-        addSingleActionVoiceCommand("Jalousie hoch", "Jalousien hochfahren");
-        addSingleActionVoiceCommand("Jalousie runter", "Jalousien herunterfahren");
-        addSingleActionVoiceCommand("Kamin an", "Kamin entfachen");
-        addSingleActionVoiceCommand("Kamin aus", "Kamin löschen");
+        addSingleActionVoiceCommand("an","Licht Oben Ein");
+        addSingleActionVoiceCommand("aus", "Licht Oben Aus");
+        addSingleActionVoiceCommand("Licht an", "Licht Mitte/Unten Ein");
+        addSingleActionVoiceCommand("Licht aus", "Licht Mitte/Unten Aus");
+
+        addSingleActionVoiceCommand("Jalousie hoch", "Jalousie-Langezeitfahren hoch");
+        addSingleActionVoiceCommand("Jalousie runter", "Jalousie-Langezeitfahren runter");
 
         //TODO Noch romantischer gestalten ;)
         ArrayList<KnxAction> actionListRomantisch = new ArrayList<KnxAction>();
-        actionListRomantisch.add(knxActions.get("Licht dimmen"));
-        actionListRomantisch.add(knxActions.get("Kamin entfachen"));
+        actionListRomantisch.add(knxActions.get("Licht Mitte/Unten Aus"));
+        actionListRomantisch.add(knxActions.get("Jalousie-Langezeitfahren runter"));
         addVoiceCommand("romantisch",actionListRomantisch);
     }
 

@@ -40,10 +40,12 @@ import tuwien.auto.calimero.exception.KNXFormatException;
  */
 public class KnxAdapter {
 
+    private static KnxAdapter knxAdapter = null;
+
     //private KnxCommunicationObject knxCommunicationObject;
 
     private static Activity activity;
-    private final String knx_gateway_ip;
+    private String knx_gateway_ip = null;
     private  KnxCommunicationObject knxCommunicationObject = null;
     private IOHandler io;
     private BlockingQueue<KnxAction> bq = new ArrayBlockingQueue<KnxAction>(50);
@@ -59,6 +61,11 @@ public class KnxAdapter {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        knxAdapter = this;
+    }
+
+    public static KnxAdapter getInstanceIfExists(){
+        return knxAdapter;
     }
 
     public static String getIP(){

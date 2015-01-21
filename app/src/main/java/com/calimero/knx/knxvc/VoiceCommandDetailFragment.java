@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.calimero.knx.knxvc.core.KnxAction;
+import com.calimero.knx.knxvc.core.KnxAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,8 @@ public class VoiceCommandDetailFragment extends Fragment {
      * The dummy content this fragment is presenting.
      */
     private VoiceCommand mItem;
+
+    private Button btnExecute;
 
     /** The List View */
     ListView actionListView;
@@ -62,11 +66,26 @@ public class VoiceCommandDetailFragment extends Fragment {
         }
     }
 
+    private void executeVoiceCommand() {
+        KnxAdapter knxAdapter = KnxAdapter.getInstanceIfExists();
+        if(knxAdapter!=null) {
+            knxAdapter.executeKnxActions(mItem.getActions());
+        }else{
+            //TODO Schmeiss ein Fehler aufs UI
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_voicecommand_detail, container, false);
-
+        btnExecute = (Button) rootView.findViewById(R.id.fragment_voicecommand_detail_btn_execute);
+        btnExecute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                executeVoiceCommand();
+            }
+        });
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
             ArrayList<KnxAction> tempActions = new ArrayList<KnxAction>(mItem.actions);
@@ -96,6 +115,8 @@ public class VoiceCommandDetailFragment extends Fragment {
                     saveVoiceCommand();
                 }
             });
+        }else{
+            btnExecute.setActivated(false);
         }
         return rootView;
     }

@@ -3,8 +3,8 @@
 
 	<Actions>
 	
-		<Action id="000" name="on" data="lynfwijrq2irjpa8ufr" groupAddress="1/2/1" />
-		<Action id="001" name="off" data="nq34nn3göq3unf34w4g" groupAddress="1/2/2" />
+		<Action id="998" name="mock1" data="lynfwijrq2irjpa8ufr" groupAddress="1/2/1" />
+		<Action id="999" name="mock2" data="nq34nn3goq3unf34w4g" groupAddress="1/2/2" />
 		
 	</Actions>
 	
@@ -13,7 +13,7 @@
 	
 		<VoiceCommand value="Licht an">
 			<ActionRefs>
-				<ActionRef id="000" />
+				<ActionRef id="998" />
 			</ActionRefs>
 		</VoiceCommand>
 		<VoiceCommand value="Licht ein">
@@ -23,7 +23,7 @@
 		</VoiceCommand>
 		<VoiceCommand value="Licht aus">
 			<ActionRefs>
-				<ActionRef id="001" />
+				<ActionRef id="999" />
 			</ActionRefs>
 		</VoiceCommand>
 

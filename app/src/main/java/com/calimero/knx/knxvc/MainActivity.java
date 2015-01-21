@@ -32,6 +32,7 @@ import com.calimero.knx.knxvc.core.Profile;
 import com.calimero.knx.knxvc.core.VoiceInterpreter;
 import com.calimero.knx.knxvc.dao.MasterDao;
 import com.calimero.knx.knxvc.dao.VoiceCommandDao;
+import com.calimero.knx.knxvc.xml.XmlKnxActionFactory;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -93,16 +94,16 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
             xmlFactoryObject = XmlPullParserFactory.newInstance();
             XmlPullParser myparser = xmlFactoryObject.newPullParser();
 
-            InputStream stream = getResources().openRawResource(R.raw.projecting_demo);
+            InputStream stream = getResources().openRawResource(R.raw.projectingdemo);
             myparser.setInput(stream, null);
 
-            int event = myparser.getEventType();
-            while (event != XmlPullParser.END_DOCUMENT)
-            {
-                String name=myparser.getName();
-                Log.d("init XML","found Event: " + name);
-                event = myparser.next();
+            XmlKnxActionFactory factory = new XmlKnxActionFactory(myparser);
+            for (KnxAction action : factory.getKNXActionsAsList()) {
+
+                Log.d("initXml", action.toString());
             }
+            factory.writeToDatabase(this);
+
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -82,7 +82,8 @@ public class KnxAction {
 
     @Override
     public String toString() {
-        return name;
+        // return "KnxAction '" + name + "' [id:" + id + "] [data:" + data + "] [groupaddress:" + groupAddress + "]";
+        return getName();
     }
 
     public String getName() {

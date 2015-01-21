@@ -1,5 +1,7 @@
 package com.calimero.knx.knxvc;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,6 +33,10 @@ import com.calimero.knx.knxvc.core.VoiceInterpreter;
 import com.calimero.knx.knxvc.dao.MasterDao;
 import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 
 public class MainActivity extends Activity implements VoiceControlFragment.OnVoiceControlInteractionListener, VoiceCommandFragment.OnVoiceCommandInteractionListener, VoiceCommandListFragment.Callbacks{
 
@@ -58,6 +64,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initXml();
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -72,6 +79,31 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         try {
             masterDao.open();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initXml() {
+
+        Log.d("init XML","loading from XML file");
+        XmlPullParserFactory xmlFactoryObject = null;
+        try {
+            xmlFactoryObject = XmlPullParserFactory.newInstance();
+            XmlPullParser myparser = xmlFactoryObject.newPullParser();
+
+            InputStream stream = getResources().openRawResource(R.raw.projecting_demo);
+            myparser.setInput(stream, null);
+
+            int event = myparser.getEventType();
+            while (event != XmlPullParser.END_DOCUMENT)
+            {
+                String name=myparser.getName();
+                Log.d("init XML","found Event: " + name);
+                event = myparser.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

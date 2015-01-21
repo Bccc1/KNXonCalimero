@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Projecting>
+
+	<Actions>
+	
+		<Action id="000" name="on" data="lynfwijrq2irjpa8ufr" groupAddress="1/2/1" />
+		<Action id="001" name="off" data="nq34nn3göq3unf34w4g" groupAddress="1/2/2" />
+		
+	</Actions>
+	
+	
+	<VoiceCommands>
+	
+		<VoiceCommand value="Licht an">
+			<ActionRefs>
+				<ActionRef id="000" />
+			</ActionRefs>
+		</VoiceCommand>
+		<VoiceCommand value="Licht ein">
+			<ActionRefs>
+				<ActionRef id="000" />
+			</ActionRefs>
+		</VoiceCommand>
+		<VoiceCommand value="Licht aus">
+			<ActionRefs>
+				<ActionRef id="001" />
+			</ActionRefs>
+		</VoiceCommand>
+
+    </VoiceCommands>
+
+</Projecting>

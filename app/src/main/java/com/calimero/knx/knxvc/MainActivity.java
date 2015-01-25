@@ -1,5 +1,7 @@
 package com.calimero.knx.knxvc;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -43,6 +45,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 public class MainActivity extends Activity implements VoiceControlFragment.OnVoiceControlInteractionListener, VoiceCommandFragment.OnVoiceCommandInteractionListener, VoiceCommandListFragment.Callbacks{
 
+    public static final String PROJECTING_FILE = "/sdcard/windows/BstSharedFolder/projectingdemo.xml";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -69,8 +72,6 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initXml();
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
@@ -88,7 +89,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         }
     }
 
-    private void initXml() {
+    private void importXml() {
 
         Log.d("init XML","loading from XML file");
         XmlPullParserFactory xmlFactoryObject = null;
@@ -96,16 +97,15 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
             xmlFactoryObject = XmlPullParserFactory.newInstance();
             XmlPullParser myparser = xmlFactoryObject.newPullParser();
 
-            InputStream stream = getResources().openRawResource(R.raw.projectingdemo);
-            myparser.setInput(stream, null);
+            File projectingConfig = new File(PROJECTING_FILE);
 
-            XmlKnxActionFactory factory = new XmlKnxActionFactory(myparser);
-            for (KnxAction action : factory.getKNXActionsAsList()) {
+            if (projectingConfig.exists()) {
+                FileInputStream stream = new FileInputStream(projectingConfig);
+                myparser.setInput(stream, null);
 
-                Log.d("initXml", action.toString());
+                XmlKnxActionFactory factory = new XmlKnxActionFactory(myparser);
+                factory.writeToDatabase(this);
             }
-            factory.writeToDatabase(this);
-
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -137,6 +137,9 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
                 return true;
             case R.id.action_loadTestData:
                 loadTestDateIntoDB();
+                return true;
+            case R.id.action_importXmlData:
+                importXml();
                 return true;
             case R.id.action_drop_db:
                 dropDatabase();

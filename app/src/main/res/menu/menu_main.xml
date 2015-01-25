@@ -11,6 +11,8 @@
         android:orderInCategory="100" android:showAsAction="never" />
     <item android:id="@+id/action_loadTestData" android:title="loadTestData"
         />
+    <item android:id="@+id/action_importXmlData" android:title="XML-Projektierung importieren"
+        />
     <item android:id="@+id/action_drop_db" android:title="dropDB"
         />
 </menu>

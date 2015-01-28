@@ -28,8 +28,8 @@ public class KnxActionFactory {
             kal.add(newAction("Licht Mitte/Unten Ein","1/5/11","1"));
             kal.add(newAction("Licht Mitte/Unten Aus","1/5/11","0"));
 
-            kal.add(newAction("Jalousie-Langezeitfahren hoch","1/1/5","1"));
-            kal.add(newAction("Jalousie-Langezeitfahren runter","1/1/5","0"));
+            kal.add(newAction("Jalousie-Langezeitfahren hoch","1/1/5","0"));
+            kal.add(newAction("Jalousie-Langezeitfahren runter","1/1/5","1"));
             actionList = kal;
         }
         return actionList;

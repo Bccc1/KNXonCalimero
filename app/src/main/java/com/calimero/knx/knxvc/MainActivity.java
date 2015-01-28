@@ -2,6 +2,7 @@ package com.calimero.knx.knxvc;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -29,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.calimero.knx.knxvc.core.KnxAction;
 import com.calimero.knx.knxvc.core.KnxActionFactory;
@@ -38,6 +41,7 @@ import com.calimero.knx.knxvc.dao.MasterDao;
 import com.calimero.knx.knxvc.dao.VoiceCommandDao;
 import com.calimero.knx.knxvc.xml.XmlKnxActionFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -113,6 +117,31 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
         }
     }
 
+    private void downloadDummyXml() throws IOException {
+
+        boolean targetExists = false;
+        long targetSize = 0l;
+        File targetFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        targetExists = targetFolder.exists();
+        targetSize = targetFolder.length();
+
+        String targetFile = targetFolder.getAbsolutePath() + "/projectingdemo.xml";
+        targetExists = new File(targetFile).exists();
+        targetSize = new File(targetFile).length();
+
+        int sourceId = getResources().getIdentifier("raw/projectingdemo",
+                "raw", getPackageName());
+
+        InputStream inputStream = getResources().openRawResource(sourceId);
+        FileOutputStream fileOutputStream = new FileOutputStream(targetFile);
+        // IOUtils is a class from Apache Commons IO
+        // It writes an InputStream to an OutputStream
+        IOUtils.copy(inputStream, fileOutputStream);
+        fileOutputStream.close();
+
+        targetExists = new File(targetFile).exists();
+        targetSize = new File(targetFile).length();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -141,6 +170,23 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
             case R.id.action_importXmlData:
                 importXml();
                 return true;
+            case R.id.action_downloadDummyXml:
+                try {
+                    downloadDummyXml();
+                    Toast.makeText(this,
+                            "Leere XML-Projektierung befindet sich im Downloads-Verzeichnis.",
+                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,
+                            "Bitte beachten: Dateierzeugung ist nur erfolgreich, "
+                             + "wenn KEINE USB-Verbindung besteht.",
+                            Toast.LENGTH_LONG).show();
+                }
+                catch (IOException e) {
+                    Toast.makeText(this,
+                            "Download der leeren XML-Projektierung schlug fehl.",
+                            Toast.LENGTH_LONG).show();
+                }
+                return true;
             case R.id.action_drop_db:
                 dropDatabase();
                 return true;
@@ -162,7 +208,7 @@ public class MainActivity extends Activity implements VoiceControlFragment.OnVoi
     private void openNewVoiceCommand(){
         Intent newVoiceCommandIntent = new Intent(this, AddVoiceCommandActivity.class);
         //newVoiceCommandIntent.putExtra();
-        startActivityForResult(newVoiceCommandIntent,REQUEST_CODE_ADD_VC);
+        startActivityForResult(newVoiceCommandIntent, REQUEST_CODE_ADD_VC);
     }
 
     private void loadTestDateIntoDB(){

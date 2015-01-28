@@ -9,10 +9,12 @@
 
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" android:showAsAction="never" />
-    <item android:id="@+id/action_loadTestData" android:title="loadTestData"
+    <item android:id="@+id/action_loadTestData" android:title="Test-Daten laden"
         />
     <item android:id="@+id/action_importXmlData" android:title="XML-Projektierung importieren"
         />
-    <item android:id="@+id/action_drop_db" android:title="dropDB"
+    <item android:id="@+id/action_downloadDummyXml" android:title="Leere XML-Projektierung erzeugen"
+        />
+    <item android:id="@+id/action_drop_db" android:title="Datenbank zurücksetzen (WARNUNG: Setzt Datenbank zurück)"
         />
 </menu>

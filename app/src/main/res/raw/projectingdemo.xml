@@ -3,31 +3,27 @@
 
 	<Actions>
 	
-		<Action id="996" name="mock1" data="lynfwijrq2irjpa8ufr" groupAddress="1/2/1" />
-		<Action id="997" name="mock2" data="nq34nn3goq3unf34w4g" groupAddress="1/2/2" />
-		<Action id="998" name="mock2" data="nq34nn3goq3unf34w4g" groupAddress="1/2/7" />
-		<Action id="999" name="mock2" data="nq34nn3goq3unf34w4g" groupAddress="1/2/8" />
+		<Action id="" name="" data="" groupAddress="" />
+        <Action id="" name="" data="" groupAddress="" />
+        <Action id="" name="" data="" groupAddress="" />
 				
 	</Actions>
 	
 	
 	<VoiceCommands>
-	
-		<VoiceCommand value="Licht an">
-			<ActionRefs>
-				<ActionRef id="997" />
-			</ActionRefs>
-		</VoiceCommand>
-		<VoiceCommand value="Licht ein">
-			<ActionRefs>
-				<ActionRef id="998" />
-			</ActionRefs>
-		</VoiceCommand>
-		<VoiceCommand value="Licht aus">
-			<ActionRefs>
-				<ActionRef id="999" />
-			</ActionRefs>
-		</VoiceCommand>
+
+        <VoiceCommand value="">
+            <ActionRefs>
+                <ActionRef id="" />
+                <ActionRef id="" />
+            </ActionRefs>
+        </VoiceCommand>
+        <VoiceCommand value="">
+            <ActionRefs>
+                <ActionRef id="" />
+                <ActionRef id="" />
+            </ActionRefs>
+        </VoiceCommand>
 
     </VoiceCommands>
 

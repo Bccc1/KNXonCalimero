@@ -21,15 +21,12 @@ public class VoiceInterpreter {
         this.masterDao=masterDao;
     }
 
-//   public List<String> interprete(String command){
-//       List<String> commandList = new ArrayList<String>();
-//       String[] splittedCommand = command.split("und");
-//       for(int i=0; i < splittedCommand.length - 1; i++){
-//           commandList.add(splittedCommand[i]+ " "+ splittedCommand[splittedCommand.length-1]);
-//           commandList.add(splittedCommand[i]);
-//       }
-//       return commandList;
-//   }
+    /**
+     * Interpretes the results of the spoken text and returns a list of all voicecommands which matches the spoken text.
+     * Therefore the results getting split by the keyword "und", so its possible to do several voice commands in one go.
+     * @param commandList Result list of the spoken text
+     * @return List of voicecommand-objects which matching the spoken text
+     */
     public List<VoiceCommand> interpreteAll(List<String> commandList){
         List<VoiceCommand> resultVoiceCommandList = new ArrayList<>();
        if (masterDao!=null) {
@@ -45,7 +42,8 @@ public class VoiceInterpreter {
                        if(!isCommandExisting(voiceCommand,resultVoiceCommandList)) {
                            resultVoiceCommandList.add(masterDao.getVoiceCommandbyText(voiceCommand));
                        }
-                   } else {
+                   } 
+                   else {
                        for (int i = 0; i < splittedCommand.length - 1; i++) {
                            String interpretedCommand = splittedCommand[i] + " " + splittedCommand[splittedCommand.length - 1];
                            if (voiceCommand.toLowerCase().replaceAll(" ","").equals(interpretedCommand.toLowerCase().replaceAll(" ", ""))) {
@@ -82,6 +80,7 @@ public class VoiceInterpreter {
         return resultVoiceCommandList;
     }
 
+    //Checks if there is a command in a list of voicecommand-objects which matches the interpreted command
     private Boolean isCommandExisting(String commandName, List<VoiceCommand> voiceCommandList) {
         Boolean isExisting = false;
         if (masterDao != null) {

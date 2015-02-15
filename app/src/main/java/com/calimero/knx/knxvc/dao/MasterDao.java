@@ -23,6 +23,7 @@ public class MasterDao {
     private SQLiteDatabase database;
     private DatabaseHelper dbHelper;
 
+    //Columns of database table Action
     private final String[] COLUMNS_ACTION = {
             DatabaseHelper.KEY_ID,
             DatabaseHelper.COL_ACTION_NAME,
@@ -34,15 +35,26 @@ public class MasterDao {
         this.dbHelper = new DatabaseHelper(context);
     }
 
+    /**
+     * Opens the connection to the database
+     * @throws SQLException
+     */
     public void open() throws SQLException {
         database = dbHelper.getWritableDatabase();
         Boolean test = database.isOpen();
     }
 
+    /**
+     * Closes the connection of the database
+     */
     public void close() {
         dbHelper.close();
     }
 
+    /**
+     * Saves an action-object, overwrite data if already exists
+     * @param knxaction Action-Object to be stored in database
+     */
     public void saveKnxAction(KnxAction knxaction) {
         if(knxaction.getId() != null){
             KnxAction knxactionVergleich = getKnxAction(knxaction.getId());
@@ -76,6 +88,10 @@ public class MasterDao {
 
     }
 
+    /**
+     * Saves a voicecommand-object, overwrite data if already exists
+     * @param voicecommand Voicecommand to be stored
+     */
     public void saveVoiceCommand(VoiceCommand voicecommand) {
         if(voicecommand.getId() != null){
             VoiceCommand voicecommandVergleich = getVoiceCommand(voicecommand.getId());
@@ -128,6 +144,10 @@ public class MasterDao {
         updateCommandAction(voicecommand);
     }
 
+    /**
+     * Returns all actions stored in database
+     * @return List of action-objects
+     */
     public List<KnxAction> getAllKnxAction() {
         Cursor cursor = database.rawQuery(
                 "SELECT " + DatabaseHelper.KEY_ID + ", " +
@@ -145,6 +165,11 @@ public class MasterDao {
         return knxaction;
     }
 
+    /**
+     * Returns all actions of a specific voicecommand
+     * @param commandId ID of the voicecommand
+     * @return List of action-objects
+     */
     public List<KnxAction> getAllKnxActionFromCommand(int commandId) {
         Cursor cursor = database.rawQuery(
                 "SELECT " + DatabaseHelper.COL_COMMAND_ID + ", " +
@@ -175,7 +200,11 @@ public class MasterDao {
         return knxaction;
     }
 
-
+    /**
+     * Returns a specific action-object
+     * @param actionId ID of the action
+     * @return Action-Object
+     */
     public KnxAction getKnxAction(int actionId) {
         Cursor cursor = database.rawQuery(
                 "SELECT " + DatabaseHelper.KEY_ID + ", " +
@@ -192,6 +221,10 @@ public class MasterDao {
         return knxaction;
     }
 
+    /**
+     * Returns all voicecommands stored in database
+     * @return List of voicecommand-object
+     */
     public List<VoiceCommand> getAllVoiceCommand() {
         Cursor cursor = database.rawQuery(
                 "SELECT " + DatabaseHelper.KEY_ID + ", " +
@@ -208,6 +241,11 @@ public class MasterDao {
         return voicecommand;
     }
 
+    /**
+     * Returns a specific voicecommand-object
+     * @param commandId ID of the voicecommand
+     * @return Voiccecommand-object
+     */
     public VoiceCommand getVoiceCommand(int commandId) {
         Cursor cursor = database.rawQuery(
                 "SELECT " + DatabaseHelper.KEY_ID + ", " +
@@ -223,6 +261,11 @@ public class MasterDao {
         return voicecommand;
     }
 
+    /**
+     * Returns a specific voicecommand identified by the text
+     * @param text Text of the voicecommand
+     * @return Voicecommand-object
+     */
     public VoiceCommand getVoiceCommandbyText(String text) {
         Cursor cursor = database.rawQuery(
                 "SELECT " + DatabaseHelper.KEY_ID + ", " +
@@ -238,40 +281,70 @@ public class MasterDao {
         return voicecommand;
     }
 
+    /**
+     * Deletes a profile by ID
+     * @param id ID of the profile
+     */
     public void deleteProfile(int id){
         database.delete(DatabaseHelper.TABLE_PROFILE, DatabaseHelper.KEY_ID + "=" + id, null);
     }
 
+    /**
+     * Deletes a voicecommand by ID
+     * @param id ID of the voicecommand
+     */
     public void deleteVoiceCommand(int id){
         database.delete(DatabaseHelper.TABLE_COMMAND_ACTION, DatabaseHelper.COL_COMMAND_ID + "=" + id, null);
         database.delete(DatabaseHelper.TABLE_COMMAND, DatabaseHelper.KEY_ID + "=" + id, null);
     }
 
+    /**
+     * Deletes a action by ID
+     * @param id ID of the Action
+     */
     public void deleteAction(int id){
         database.delete(DatabaseHelper.TABLE_COMMAND_ACTION, DatabaseHelper.COL_ACTION_ID + "=" + id, null);
         database.delete(DatabaseHelper.TABLE_ACTION, DatabaseHelper.KEY_ID + "=" + id, null);
     }
 
+    /**
+     * Deletes all profiles
+     */
     public void deleteAllProfiles(){
         database.delete(DatabaseHelper.TABLE_PROFILE, null, null);
     }
 
+    /**
+     * Deletes all actions
+     */
     public void deleteAllActions(){
         database.delete(DatabaseHelper.TABLE_COMMAND_ACTION, null, null);
         database.delete(DatabaseHelper.TABLE_ACTION, null, null);
     }
 
+    /**
+     * Deletes all voicecommands
+     */
     public void deleteAllCommands(){
         database.delete(DatabaseHelper.TABLE_COMMAND_ACTION, null, null);
         database.delete(DatabaseHelper.TABLE_COMMAND, null, null);
     }
 
+    /**
+     * Inserts a profile
+     * @param profile Profile-object to be stored
+     */
     public void insertProfile(Profile profile){
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COL_PROFILE_NAME, profile.getName());
         database.insert(DatabaseHelper.TABLE_PROFILE, null, values);
     }
 
+    /**
+     * Returns a specific profile
+     * @param profileId ID of the profile
+     * @return Profile-object
+     */
     public Profile getProfile(int profileId) {
         Cursor cursor = database.rawQuery(
                 "SELECT " + DatabaseHelper.KEY_ID + ", " +

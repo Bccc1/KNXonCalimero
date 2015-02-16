@@ -27,4 +27,5 @@ dependencies {
     compile files('src/main/libs/calimero-tools-2.0.2.jar')
     compile 'com.android.support:support-v13:21.0.3'
     compile 'com.android.support:support-v4:21.0.3'
+    compile "commons-io:commons-io:+"
 }

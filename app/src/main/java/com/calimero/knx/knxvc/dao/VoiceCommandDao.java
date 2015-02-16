@@ -14,6 +14,11 @@ import java.util.Map;
 
 /**
  * Created by David on 29.11.2014.
+ *
+ * Sollte ursprünglich nur verwendet werden für die Testdaten und während die Datenbank noch nicht stand.
+ * Jetzt wird es an einigen Stellen immer noch verwendet, weshalb die Klasse erweitert wurde.
+ * Ist ziemliches Flickwerk und sollte langfristig komplett entfernt werden.
+ * An den meisten Stellen könnte direkt auf die Datenbank über das MasterDao zugegriffen werden.
  */
 public class VoiceCommandDao {
 
@@ -30,10 +35,15 @@ public class VoiceCommandDao {
     List<VoiceCommand> voiceCommands = new ArrayList<VoiceCommand>();
     Map<String, VoiceCommand> voiceCommandsMapping = new HashMap<String, VoiceCommand>();
 
+
+    /**
+     * klassisches Singleton Pattern.
+     * @return eine Instanz des VoiceCommandDao
+     */
     public static VoiceCommandDao getInstance(){
         if(voiceCommandDao == null) {
             voiceCommandDao = new VoiceCommandDao();
-            voiceCommandDao.createVoiceCommandMapping();
+            voiceCommandDao.loadDataFromDb();
         }
         return voiceCommandDao;
     }
@@ -41,13 +51,27 @@ public class VoiceCommandDao {
     private VoiceCommandDao() {
     }
 
+    /**
+     * aktualisiert die Daten des Dao Caches mit denen aus der Datenbank.
+     */
+    public void loadDataFromDb(){
+        voiceCommands = MainActivity.masterDao.getAllVoiceCommand();
+        voiceCommands.clear();
+        for(VoiceCommand vc : voiceCommands){
+            voiceCommandsMapping.put(vc.getName(),vc);
+        }
+    }
+
+    /**
+     * Erzeugt Testdaten
+     */
     public void createVoiceCommandMapping(){
         voiceCommands = new ArrayList<VoiceCommand>();
         voiceCommandsMapping = new HashMap<String, VoiceCommand>();
 
-        //Hier ist erstmal ein hardgecodetes Mapping von Sprachbefehl zu KNXBefehl
-        HashMap<String, KnxAction> knxActions = KnxActionFactory.convertKnxActionListTosMap(MainActivity.masterDao.getAllKnxAction());
+        HashMap<String, KnxAction> knxActions = KnxActionFactory.convertKnxActionListToMap(MainActivity.masterDao.getAllKnxAction());
 
+        //Hier ist erstmal ein hardgecodetes Mapping von Sprachbefehl zu KNXBefehl
         addSingleActionVoiceCommand("an","Licht Oben Ein");
         addSingleActionVoiceCommand("aus", "Licht Oben Aus");
         addSingleActionVoiceCommand("Licht an", "Licht Mitte/Unten Ein");
@@ -86,7 +110,7 @@ public class VoiceCommandDao {
     }
 
     private VoiceCommand singleActionVoiceCommand(String name, String action){
-        HashMap<String, KnxAction> knxActions = KnxActionFactory.convertKnxActionListTosMap(MainActivity.masterDao.getAllKnxAction());
+        HashMap<String, KnxAction> knxActions = KnxActionFactory.convertKnxActionListToMap(MainActivity.masterDao.getAllKnxAction());
         return singleActionVoiceCommand(name, knxActions.get(action));
     }
 
@@ -118,7 +142,6 @@ public class VoiceCommandDao {
     //}
 
     public Map<String, VoiceCommand> getVoiceCommandsMapping() {
-        //Hier dann aus getVoiceCommands() eine Map machen.
         return voiceCommandsMapping;
     }
 

@@ -114,6 +114,7 @@ public class VoiceControlFragment extends Fragment {
             VoiceInterpreter interpreter = new VoiceInterpreter(MainActivity.masterDao);
             List<VoiceCommand>matchedList = interpreter.interpreteAll(matches);
 
+            vcDao.loadDataFromDb(); //Daten aktualisieren
             for(VoiceCommand match : matchedList){
                 if(vcDao.getVoiceCommandsMapping().containsKey(match.getName())){
                     executeKNXActions(vcDao.getVoiceCommandsMapping().get(match.getName()).actions);

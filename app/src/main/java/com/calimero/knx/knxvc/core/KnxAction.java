@@ -3,14 +3,10 @@ package com.calimero.knx.knxvc.core;
 /**
  * Created by David on 26.11.2014.
  *
- * Das sollte später alles anders, ist nur ein Prototyp.
  * Gedanke ist, dass eine KNXAction eine auszuführende Aktion ist,
  * wie zum Beispiel ein Telegram "an" an die Gruppenadresse von Licht.
  * So eine Action kann selber sich nicht ausführen sondern ist nur ein Container für die Daten.
  * Für die Ausführung bräuchte es eine weiter Klasse, aktuell der {@link KnxAdapter}.
- *
- * Dass das alles häßlich ist, weiß ich auch - Mir passte das so aber grad ganz gut in den Prototyp.
- *
  */
 public class KnxAction {
 
@@ -49,6 +45,10 @@ public class KnxAction {
 
     /* Das Zeugs was im Telegram bauch ist, kA wie das heißt. Dass "an" in "Licht an!" halt. */
     String data;
+
+    //TODO Um mehrere Datentypen zu unterstützen müsste es hier noch dataType geben
+
+    //TODO Konzept für Parametrisierbare Actions fehlt auch noch
 
     public KnxAction() {
     }

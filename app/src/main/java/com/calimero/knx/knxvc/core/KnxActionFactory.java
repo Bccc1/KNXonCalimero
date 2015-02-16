@@ -10,6 +10,7 @@ import java.util.List;
  * Das hier ist gar keine KNXActionFactory :P
  *
  * Sondern hier haue ich die Liste von vorkonfigurierten KNXActions raus.
+ * Ist nur für Testdaten und so. Sollte produktiv nie zum Einsatz kommen.
  *
  */
 public class KnxActionFactory {
@@ -20,7 +21,6 @@ public class KnxActionFactory {
 
     public static ArrayList<KnxAction> getKNXActionsAsList(){
         if(actionList == null) {
-            //TODO Echte Objekte des Aufbaus verwenden und Gruppenadresse und Telegramminhalt setzen.
             ArrayList<KnxAction> kal = new ArrayList<KnxAction>();
 
             kal.add(newAction("Licht Oben Ein","1/5/10","1"));
@@ -63,10 +63,10 @@ public class KnxActionFactory {
     }
 
     public static HashMap<String, KnxAction> getKNXActionsAsMap(){
-        return convertKnxActionListTosMap(getKNXActionsAsList());
+        return convertKnxActionListToMap(getKNXActionsAsList());
     }
 
-    public static HashMap<String, KnxAction> convertKnxActionListTosMap(List<KnxAction> list) {
+    public static HashMap<String, KnxAction> convertKnxActionListToMap(List<KnxAction> list) {
         HashMap<String, KnxAction> kal = new HashMap<String, KnxAction>();
         for (KnxAction action : list) {
             kal.put(action.name, action);
